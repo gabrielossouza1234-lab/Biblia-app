@@ -194,551 +194,634 @@
 <script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Bíblia ContonCreat - Versão Definitiva</title>
+<meta name="theme-color" content="#0a0015">
+<title>Bíblia ContonCreat v5</title>
 <style>
-:root{color-scheme:dark}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0}
-body{background:#020202;color:#e7e7ea;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Ubuntu,sans-serif;overflow:hidden;overscroll-behavior:none}
-#loading-screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(1000px 600px at 80% -20%,rgba(139,92,246,.35),transparent 60%),radial-gradient(800px 500px at 10% 120%,rgba(236,72,153,.25),transparent 50%),#000;padding:20px}
-.loading-card{width:100%;max-width:540px;background:rgba(12,12,18,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(139,92,246,.25);border-radius:28px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.05)}
-.logo-big{width:76px;height:76px;margin:0 auto 18px;border-radius:22px;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:grid;place-items:center;font-size:40px;box-shadow:0 12px 32px rgba(139,92,246,.4),inset 0 1px 0 rgba(255,255,255,.2)}
-h1{margin:0 0 6px;text-align:center;font-size:30px;letter-spacing:.3px;font-weight:800}
-.subtitle{text-align:center;opacity:.7;margin-bottom:26px;font-size:14px}
-.progress-wrap{margin:22px 0}
-.progress-label{display:flex;justify-content:space-between;font-size:12px;opacity:.8;margin-bottom:8px;font-weight:500}
-.progress-bar{height:10px;background:#0a0a11;border-radius:99px;overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
-.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#8b5cf6,#a855f7,#ec4899);transition:width .2s linear;box-shadow:0 0 20px rgba(139,92,246,.6)}
-.instructions{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;font-size:13px;line-height:1.55;margin:20px 0}
-.instructions b{color:#c4b5fd}
-.instructions ol{margin:8px 0 0 18px;padding:0}
-.instructions li{margin:5px 0;opacity:.9}
-.btn-group{display:grid;gap:12px;margin-top:22px}
-.btn{padding:15px 18px;border-radius:14px;border:0;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:9px;letter-spacing:.2px}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;box-shadow:0 10px 24px rgba(109,40,217,.35),inset 0 1px 0 rgba(255,255,255,.15)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(109,40,217,.45)}
-.btn-ghost{background:rgba(255,255,255,.06);color:#e2e2e5;border:1px solid rgba(255,255,255,.12)}
-.btn-ghost:hover{background:rgba(255,255,255,.1)}
-.hidden{display:none!important}
-
-#app{height:100%;display:none;flex-direction:column;background:#050507}
-header{height:64px;display:flex;align-items:center;gap:12px;padding:0 14px;background:rgba(8,8,12,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(139,92,246,.18);position:relative;z-index:10}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
-.brand-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(139,92,246,.3)}
-.badge{font-size:11px;padding:4px 9px;border-radius:99px;background:rgba(139,92,246,.18);color:#c4b5fd;border:1px solid rgba(139,92,246,.35);font-weight:600;white-space:nowrap}
-.badge.demo{background:rgba(236,72,153,.18);color:#f9a8d4;border-color:rgba(236,72,153,.35)}
-.header-actions{margin-left:auto;display:flex;gap:8px}
-.icon-btn{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);color:#e5e5e5;display:grid;place-items:center;cursor:pointer;font-size:19px;transition:.15s}
-.icon-btn:hover{background:rgba(255,255,255,.11);transform:translateY(-1px)}
-.icon-btn:active{transform:scale(.95)}
-
-.search-wrap{padding:12px 14px;background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.06);display:none}
-.search-wrap.active{display:block;animation:fadeIn .2s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.search-input{width:100%;padding:13px 16px;border-radius:12px;background:#0b0b13;border:1px solid rgba(139,92,246,.3);color:white;font-size:15px;outline:none;transition:.15s}
-.search-input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.2)}
-
-main{flex:1;display:flex;min-height:0;position:relative}
-#books-panel{width:340px;background:rgba(5,5,9,.85);border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;min-height:0;backdrop-filter:blur(10px)}
-.books-header{padding:14px 16px 8px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;opacity:.55;font-weight:700}
-#books-list{flex:1;overflow:auto;padding:0 12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
-.book-btn{padding:12px 13px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);text-align:left;cursor:pointer;transition:.16s;position:relative;overflow:hidden}
-.book-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,0),rgba(139,92,246,.15));opacity:0;transition:.2s}
-.book-btn:hover::before,.book-btn.active::before{opacity:1}
-.book-btn:hover{border-color:rgba(139,92,246,.4);transform:translateY(-1px)}
-.book-btn.active{border-color:#8b5cf6;box-shadow:0 0 0 1px rgba(139,92,246,.5) inset,0 4px 12px rgba(139,92,246,.15)}
-.book-name{font-weight:650;font-size:14px;position:relative}
-.book-abbrev{font-size:11px;opacity:.55;margin-top:3px;position:relative}
-.book-btn.missing{opacity:.48}
-
-#reader{flex:1;display:flex;flex-direction:column;min-width:0;background:radial-gradient(900px 500px at 50% -10%,rgba(139,92,246,.13),transparent 62%),#050507}
-.reader-top{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.35);backdrop-filter:blur(8px)}
-.back-btn{display:none;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:white;font-size:22px;cursor:pointer;place-items:center}
-.back-btn:active{transform:scale(.94)}
-.chapter-title{font-size:20px;font-weight:800;letter-spacing:.2px}
-.chapter-nav{margin-left:auto;display:flex;gap:7px}
-.chap-btn{padding:8px 13px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:white;cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
-.chap-btn:hover:not(:disabled){background:rgba(255,255,255,.12)}
-.chap-btn:disabled{opacity:.32;cursor:not-allowed}
-
-#verses-container{flex:1;overflow:auto;padding:22px 18px 120px;scroll-behavior:smooth}
-.verses-inner{max-width:820px;margin:0 auto}
-.verse{padding:15px 17px;margin-bottom:11px;border-radius:15px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.16s;line-height:1.72;font-size:17px;display:flex;gap:13px;position:relative}
-.verse:hover{background:rgba(139,92,246,.09);border-color:rgba(139,92,246,.28);transform:translateY(-1px)}
-.verse:active{transform:scale(.995)}
-.verse-num{color:#a78bfa;font-weight:800;min-width:30px;font-size:14px;margin-top:2px;font-variant-numeric:tabular-nums}
-.verse-text{flex:1;color:#eaeaee}
-.verse.fav{ background:linear-gradient(90deg,rgba(236,72,153,.12),rgba(139,92,246,.08)); border-color:rgba(236,72,153,.4); box-shadow:0 0 0 1px rgba(236,72,153,.2) inset }
-.verse.fav .verse-num{color:#f9a8d4}
-.verse.fav::after{content:'♥';position:absolute;right:12px;top:10px;font-size:12px;color:rgba(249,168,212,.7)}
-
-.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:9px;padding:6px 0;max-width:820px;margin:0 auto}
-.chapter-pill{aspect-ratio:1;display:grid;place-items:center;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);cursor:pointer;font-weight:700;font-size:15px;transition:.15s}
-.chapter-pill:hover{background:rgba(139,92,246,.22);border-color:#8b5cf6;transform:translateY(-2px)}
-.chapter-pill.active{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;box-shadow:0 6px 16px rgba(109,40,217,.35)}
-
-.empty-state{text-align:center;padding:70px 20px;opacity:.72}
-.empty-state-icon{font-size:52px;margin-bottom:16px;opacity:.6;filter:grayscale(.2)}
-
-.download-prompt{max-width:620px;margin:40px auto;padding:34px 28px;background:linear-gradient(180deg,rgba(139,92,246,.14),rgba(139,92,246,.04));border:1px solid rgba(139,92,246,.35);border-radius:22px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)}
-.download-prompt h3{margin:0 0 10px;font-size:22px}
-.download-prompt p{opacity:.85;line-height:1.6;margin:0 0 20px}
-
-#search-results{padding:18px;max-width:900px;margin:0 auto}
-.result-item{padding:15px 17px;margin-bottom:10px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:13px;cursor:pointer;transition:.15s}
-.result-item:hover{background:rgba(139,92,246,.13);border-color:rgba(139,92,246,.35);transform:translateY(-1px)}
-.result-ref{color:#bca8ff;font-weight:700;font-size:13px;margin-bottom:5px;letter-spacing:.2px}
-.result-text{opacity:.92;line-height:1.55}
-
-#verse-modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
-#verse-modal.show{display:flex}
-.modal-sheet{width:100%;max-width:540px;background:#0e0e15;border-radius:26px 26px 0 0;border:1px solid rgba(139,92,246,.35);border-bottom:0;padding:22px 20px 28px;animation:slideUp .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -20px 60px rgba(0,0,0,.6)}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:44px;height:5px;background:rgba(255,255,255,.2);border-radius:99px;margin:0 auto 16px}
-.modal-ref{font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px}
-.modal-verse{font-size:17px;line-height:1.65;padding:16px 18px;background:rgba(0,0,0,.45);border-radius:14px;border:1px solid rgba(255,255,255,.08);margin-bottom:18px}
-.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.modal-btn{padding:14px; border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:white;font-weight:650;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;transition:.15s}
-.modal-btn:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
-.modal-btn.primary{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:0;box-shadow:0 6px 16px rgba(109,40,217,.3)}
-.modal-btn.primary:hover{box-shadow:0 8px 20px rgba(109,40,217,.4)}
-
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#16111f;border:1px solid rgba(139,92,246,.45);padding:12px 20px;border-radius:99px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:.35s cubic-bezier(.2,.8,.2,1);pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap;max-width:90vw}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-@media (max-width:900px){
-  #books-panel{position:absolute;inset:64px 0 0 0;width:100%;z-index:5;border-right:0;transform:translateX(0);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-  #app.reading #books-panel{transform:translateX(-100%)}
-  .back-btn{display:grid}
-  #verses-container{padding:16px 14px 120px}
-  .verse{font-size:16.5px;padding:14px 15px}
-  .chapter-title{font-size:18px}
-  .loading-card{padding:26px}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent }
+:root {
+  --bg:#0a0015; --bg2:#1e0533; --surface:rgba(255,255,255,0.06);
+  --text:#ffffff; --muted:#a78bfa; --highlight:#facc15;
+  --font-size:18px; --radius:14px;
 }
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(139,92,246,.32);border-radius:5px;border:2px solid transparent;background-clip:padding-box}
-::-webkit-scrollbar-thumb:hover{background:rgba(139,92,246,.5);background-clip:padding-box}
+html, body { height:100%; overflow-x:hidden }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  color: var(--text); line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+button { font-family:inherit }
+
+/* Loading */
+#loading {
+  position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; background:#050008; transition:opacity .5s;
+}
+.logo-load {
+  font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-bottom:2rem;
+  background:linear-gradient(90deg,#a78bfa,#ec4899,#8b5cf6);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+.progress-wrap { width:82%; max-width:340px }
+.progress-bar { width:100%; height:8px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; padding:2px }
+.progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#7c3aed,#ec4899); border-radius:99px; transition:width .3s; box-shadow:0 0 20px rgba(236,72,153,.5) }
+#loading-text { margin-top:1rem; color:var(--muted); font-size:.9rem; text-align:center }
+.fonts-load { display:flex; gap:.5rem; margin-top:1.5rem; font-size:.75rem; color:#64748b }
+.font-dot { width:8px; height:8px; border-radius:50%; background:#334155 }
+.font-dot.active { background:#a78bfa; box-shadow:0 0 8px #a78bfa }
+
+/* App */
+#app { min-height:100vh; display:flex; flex-direction:column }
+header {
+  position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:.6rem;
+  padding:.7rem .9rem; background:rgba(10,0,21,.85); backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(167,139,250,.15);
+}
+.icon-btn {
+  width:40px; height:40px; display:grid; place-items:center; flex-shrink:0;
+  background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:12px;
+  color:var(--text); cursor:pointer; transition:.2s;
+}
+.icon-btn:active { transform:scale(.93); background:rgba(255,255,255,.12) }
+.icon-btn svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
+#headerTitle { flex:1; font-size:1.05rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.header-actions { display:flex; gap:.5rem }
+
+/* Sidebar */
+#overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(2px); z-index:39; opacity:0; pointer-events:none; transition:.3s }
+#overlay.show { opacity:1; pointer-events:all }
+#sidebar {
+  position:fixed; top:0; left:0; bottom:0; width:300px; max-width:86vw; z-index:40;
+  background:linear-gradient(180deg,#14031f 0%, #07000d 100%); border-right:1px solid rgba(167,139,250,.2);
+  transform:translateX(-100%); transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  display:flex; flex-direction:column;
+}
+#sidebar.open { transform:translateX(0) }
+.sidebar-top { padding:1rem; border-bottom:1px solid rgba(255,255,255,.08) }
+#searchInput {
+  width:100%; padding:.75rem .9rem; background:rgba(0,0,0,.4); border:1px solid rgba(167,139,250,.25);
+  border-radius:12px; color:var(--text); font-size:.95rem; outline:none;
+}
+#searchInput:focus { border-color:#8b5cf6; box-shadow:0 0 0 3px rgba(139,92,246,.2) }
+.books { flex:1; overflow-y:auto; padding:.6rem; scrollbar-width:thin }
+.book-btn {
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  padding:.7rem .85rem; margin-bottom:.25rem; background:transparent; border:none;
+  color:#d1c5f5; border-radius:10px; cursor:pointer; text-align:left; font-size:.95rem;
+  transition:.2s;
+}
+.book-btn:hover { background:rgba(255,255,255,.05); color:#fff }
+.book-btn.active { background:linear-gradient(90deg,#7c3aed,#a21caf); color:#fff; font-weight:600; box-shadow:0 4px 14px rgba(124,58,237,.3) }
+.book-chapters { font-size:.75rem; opacity:.6 }
+.sidebar-foot { padding:.8rem; border-top:1px solid rgba(255,255,255,.08) }
+.fav-btn { width:100%; padding:.7rem; background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:12px; color:var(--text); cursor:pointer; font-size:.9rem }
+
+/* Main */
+main { flex:1; width:100%; max-width:820px; margin:0 auto; padding:1rem .9rem 140px }
+.chapter-head { margin:1.5rem 0 1rem; text-align:center }
+.chapter-head h2 { font-size:1.6rem; font-weight:800; letter-spacing:-.5px; background:linear-gradient(90deg,#fff,#c4b5fd); -webkit-background-clip:text; color:transparent }
+.verses { display:flex; flex-direction:column; gap:.15rem }
+.verse {
+  display:flex; gap:.75rem; align-items:flex-start; padding:.65rem .7rem .65rem .9rem;
+  border-radius:12px; position:relative; transition:.2s; border-left:3px solid transparent;
+}
+.verse:active { background:rgba(255,255,255,.03) }
+.verse.highlighted {
+  background:color-mix(in srgb, var(--highlight) 16%, transparent);
+  border-left-color:var(--highlight);
+}
+.verse-num {
+  font-size:.78rem; font-weight:700; color:var(--muted); min-width:1.7rem; padding-top:.25rem;
+  user-select:none; font-variant-numeric:tabular-nums; cursor:pointer;
+}
+.verse.favorited .verse-num { color:#facc15; text-shadow:0 0 10px rgba(250,204,21,.5) }
+.verse.favorited .verse-num::after { content:"★"; margin-left:3px; font-size:.7rem }
+.verse-text { flex:1; font-size:var(--font-size); line-height:1.75; color:var(--text); word-wrap:break-word }
+.verse-actions {
+  display:flex; gap:4px; margin-left:.3rem; opacity:.55; transition:.2s; flex-shrink:0; padding-top:.1rem;
+}
+.verse:hover .verse-actions, .verse:focus-within .verse-actions { opacity:1 }
+.v-btn {
+  width:30px; height:30px; display:grid; place-items:center; background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08); border-radius:8px; color:#c4b5fd; cursor:pointer; transition:.2s;
+}
+.v-btn:hover { background:rgba(255,255,255,.12); color:#fff; transform:translateY(-1px) }
+.v-btn:active { transform:scale(.92) }
+.v-btn svg { width:15px; height:15px }
+
+/* Footer nav */
+.chap-nav {
+  position:fixed; bottom:78px; left:50%; transform:translateX(-50%); z-index:20;
+  display:flex; align-items:center; gap:.5rem; padding:.45rem; background:rgba(15,0,30,.9);
+  backdrop-filter:blur(16px); border:1px solid rgba(167,139,250,.25); border-radius:99px; box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+.chap-nav button {
+  padding:.55rem 1rem; border:none; background:var(--surface); color:var(--text); border-radius:99px;
+  font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s;
+}
+.chap-nav button:active { transform:scale(.95) }
+.chap-nav button:disabled { opacity:.4 }
+#chapterSelect {
+  background:rgba(0,0,0,.5); color:#fff; border:1px solid rgba(255,255,255,.15); border-radius:99px;
+  padding:.5rem .8rem; font-size:.9rem; font-weight:600; min-width:70px; text-align:center;
+}
+
+/* Pix */
+#pixBtn {
+  position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:25;
+  padding:.7rem 1.3rem; background:linear-gradient(90deg,#7c3aed,#ec4899); color:#fff; border:none;
+  border-radius:99px; font-weight:700; font-size:.88rem; cursor:pointer; white-space:nowrap;
+  box-shadow:0 8px 24px rgba(124,58,237,.4), inset 0 1px 0 rgba(255,255,255,.2); transition:.2s;
+}
+#pixBtn:active { transform:translateX(-50%) scale(.96) }
+
+/* Settings Panel */
+.panel { position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:1rem; background:rgba(0,0,0,.75); backdrop-filter:blur(10px); opacity:0; pointer-events:none; transition:.3s }
+.panel.show { opacity:1; pointer-events:all }
+.panel-content {
+  width:100%; max-width:440px; max-height:88vh; overflow:auto; background:linear-gradient(180deg,#1a0730,#080010);
+  border:1px solid rgba(167,139,250,.3); border-radius:24px; padding:1.5rem; box-shadow:0 20px 60px rgba(0,0,0,.7);
+  transform:translateY(20px); transition:.3s;
+}
+.panel.show .panel-content { transform:translateY(0) }
+.panel h2 { font-size:1.3rem; margin-bottom:1.2rem; font-weight:800 }
+.setting-group { margin-bottom:1.4rem }
+.setting-group > label { display:block; font-size:.9rem; color:#c4b5fd; margin-bottom:.6rem; font-weight:600 }
+.range-wrap { display:flex; align-items:center; gap:1rem }
+input[type=range] { flex:1; height:6px; -webkit-appearance:none; appearance:none; background:rgba(255,255,255,.1); border-radius:99px; outline:none }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid #8b5cf6; box-shadow:0 2px 6px rgba(0,0,0,.4); cursor:pointer }
+#fontSizeVal { min-width:48px; text-align:right; font-variant-numeric:tabular-nums; color:#fff; font-weight:700 }
+.options { display:flex; flex-wrap:wrap; gap:.5rem }
+.opt-btn {
+  padding:.6rem .95rem; background:rgba(255,255,255,.06); border:1.5px solid rgba(255,255,255,.1);
+  border-radius:12px; color:#e9e5ff; font-size:.88rem; font-weight:600; cursor:pointer; transition:.2s;
+}
+.opt-btn.active { background:rgba(139,92,246,.25); border-color:#8b5cf6; color:#fff; box-shadow:0 0 0 3px rgba(139,92,246,.2) }
+.opt-btn.color-dot { width:42px; height:42px; padding:0; border-radius:50%; border-width:3px }
+.opt-btn.color-dot.active { transform:scale(1.1) }
+
+/* Toast */
+#toast {
+  position:fixed; bottom:120px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:#111; color:#fff; padding:.75rem 1.2rem; border-radius:12px; font-size:.9rem; font-weight:600;
+  box-shadow:0 10px 30px rgba(0,0,0,.5); opacity:0; pointer-events:none; transition:.3s; z-index:100;
+  border:1px solid rgba(255,255,255,.1); white-space:nowrap; max-width:90vw;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0) }
+
+/* Desktop */
+@media(min-width:1024px){
+  #sidebar { transform:none; width:320px }
+  #overlay { display:none }
+  header { left:320px }
+  main { margin-left:320px; max-width:900px; padding:1.5rem 2rem 150px }
+  .chap-nav { left:calc(50% + 160px) }
+  #menuBtn { display:none }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:8px; height:8px }
+::-webkit-scrollbar-thumb { background:rgba(167,139,250,.3); border-radius:4px }
+::-webkit-scrollbar-thumb:hover { background:rgba(167,139,250,.5) }
+
+.hidden { display:none !important }
 </style>
 </head>
 <body>
-<div id="loading-screen">
-  <div class="loading-card">
-    <div class="logo-big">📖</div>
-    <h1>Bíblia ContonCreat</h1>
-    <div class="subtitle">Versão Definitiva • ACF Offline</div>
-    
-    <div class="progress-wrap" id="progress-wrap">
-      <div class="progress-label">
-        <span id="status-text">Preparando...</span>
-        <span id="progress-text">0 MB</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    </div>
 
-    <div class="instructions">
-      <b>Como funciona (primeira vez):</b>
-      <ol>
-        <li>O app tenta baixar a Bíblia completa (~3,5 MB) automaticamente</li>
-        <li>Se a internet falhar, baixe manualmente <b>pt_acf.json</b> em:<br>github.com/thiagobodruk/bible</li>
-        <li>Clique em "CARREGAR BÍBLIA DO CELULAR" e selecione o arquivo</li>
-        <li>Após isso, funciona <b>100% offline para sempre</b></li>
-      </ol>
-    </div>
-
-    <div class="btn-group hidden" id="btn-group">
-      <button class="btn btn-primary" id="btn-retry">↻ TENTAR NOVAMENTE</button>
-      <button class="btn btn-primary" id="btn-upload" style="background:linear-gradient(135deg,#ec4899,#be185d)">📱 CARREGAR BÍBLIA DO CELULAR</button>
-      <button class="btn btn-ghost" id="btn-demo">Usar modo demonstração (4 livros)</button>
-    </div>
+<div id="loading">
+  <div class="logo-load">Bíblia ContonCreat</div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <p id="loading-text">Iniciando...</p>
+  <div class="fonts-load">
+    <span><span class="font-dot" id="dot1"></span> NVI</span>
+    <span><span class="font-dot" id="dot2"></span> ARA</span>
+    <span><span class="font-dot" id="dot3"></span> ACF</span>
   </div>
 </div>
 
-<div id="app">
+<div id="app" hidden>
   <header>
-    <div class="brand">
-      <div class="brand-icon">📖</div>
-      <span>ContonCreat</span>
-      <span class="badge" id="mode-badge">Offline</span>
-    </div>
+    <button class="icon-btn" id="menuBtn" aria-label="Menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <h1 id="headerTitle">Gênesis 1</h1>
     <div class="header-actions">
-      <button class="icon-btn" id="btn-search" title="Buscar">🔍</button>
-      <button class="icon-btn" id="btn-fav" title="Favoritos">❤️</button>
-      <button class="icon-btn" id="btn-pix" title="Apoiar via PIX">💜</button>
+      <button class="icon-btn" id="shareChapterBtn" title="Compartilhar capítulo">
+        <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </button>
+      <button class="icon-btn" id="settingsBtn" title="Configurações">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 0 0 0 4.6 9a1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
     </div>
   </header>
 
-  <div class="search-wrap" id="search-wrap">
-    <input class="search-input" id="search-input" placeholder="Buscar em toda a Bíblia... (ex: amor, João 3:16)" autocomplete="off">
-  </div>
+  <div id="overlay"></div>
+  <aside id="sidebar">
+    <div class="sidebar-top">
+      <input id="searchInput" type="search" placeholder="Buscar livro ou referência (ex: Jo 3:16)">
+    </div>
+    <div class="books" id="booksList"></div>
+    <div class="sidebar-foot">
+      <button class="fav-btn" id="showFavs">⭐ Favoritos (<span id="favCount">0</span>)</button>
+    </div>
+  </aside>
 
   <main>
-    <aside id="books-panel">
-      <div class="books-header">Livros da Bíblia</div>
-      <div id="books-list"></div>
-    </aside>
-
-    <section id="reader">
-      <div class="reader-top">
-        <button class="back-btn" id="back-btn">‹</button>
-        <div class="chapter-title" id="chapter-title">Selecione um livro</div>
-        <div class="chapter-nav">
-          <button class="chap-btn" id="prev-chap" title="Capítulo anterior">‹</button>
-          <button class="chap-btn" id="next-chap" title="Próximo capítulo">›</button>
-        </div>
-      </div>
-      <div id="verses-container">
-        <div class="empty-state">
-          <div class="empty-state-icon">📖</div>
-          <div>Escolha um livro ao lado para começar a leitura</div>
-        </div>
-      </div>
-    </section>
+    <div class="chapter-head"><h2 id="chapterTitle">Gênesis 1</h2></div>
+    <div class="verses" id="verses"></div>
   </main>
+
+  <div class="chap-nav">
+    <button id="prevChap">‹ Anterior</button>
+    <select id="chapterSelect" aria-label="Capítulo"></select>
+    <button id="nextChap">Próximo ›</button>
+  </div>
+
+  <button id="pixBtn">💜 Apoie via Pix</button>
 </div>
 
-<div id="verse-modal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-ref" id="modal-ref">João 3:16</div>
-    <div class="modal-verse" id="modal-verse">Texto do versículo...</div>
-    <div class="modal-actions">
-      <button class="modal-btn" id="modal-fav">❤️ Favoritar</button>
-      <button class="modal-btn" id="modal-copy">📋 Copiar</button>
-      <button class="modal-btn" id="modal-share">↗ Compartilhar</button>
-      <button class="modal-btn primary" id="modal-image">🖼️ Gerar Imagem</button>
+<!-- Settings -->
+<div id="settingsPanel" class="panel">
+  <div class="panel-content">
+    <h2>Configurações</h2>
+    
+    <div class="setting-group">
+      <label>Tamanho da fonte</label>
+      <div class="range-wrap">
+        <input type="range" id="fontSize" min="14" max="28" value="18">
+        <span id="fontSizeVal">18px</span>
+      </div>
     </div>
+
+    <div class="setting-group">
+      <label>Cor do texto</label>
+      <div class="options">
+        <button class="opt-btn" data-text="branco">Branco</button>
+        <button class="opt-btn" data-text="creme">Creme</button>
+        <button class="opt-btn" data-text="amarelo">Amarelo claro</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <label>Cor do destaque</label>
+      <div class="options">
+        <button class="opt-btn color-dot" data-hl="amarelo" style="background:#facc15" title="Amarelo"></button>
+        <button class="opt-btn color-dot" data-hl="verde" style="background:#22c55e" title="Verde"></button>
+        <button class="opt-btn color-dot" data-hl="azul" style="background:#3b82f6" title="Azul"></button>
+        <button class="opt-btn color-dot" data-hl="rosa" style="background:#ec4899" title="Rosa"></button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <label>Tema</label>
+      <div class="options">
+        <button class="opt-btn" data-theme="roxo">Roxo</button>
+        <button class="opt-btn" data-theme="escuro">Escuro</button>
+        <button class="opt-btn" data-theme="preto">Preto total</button>
+      </div>
+    </div>
+
+    <button id="closeSettings" class="opt-btn" style="width:100%; margin-top:.5rem; background:linear-gradient(90deg,#7c3aed,#ec4899); border:none; color:#fff; padding:.85rem">Fechar</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<input type="file" id="fileInput" accept=".json,application/json" hidden>
+<div id="toast"></div>
 
 <script>
-const URLS = [
-  'https://cdn.jsdelivr.net/gh/thiagobodruk/bible@master/json/pt_acf.json',
-  'https://raw.githubusercontent.com/thiagobodruk/bible/master/json/pt_acf.json',
-  'https://cdn.statically.io/gh/thiagobodruk/bible/master/json/pt_acf.json'
-];
+(() => {
+  // ===== DADOS BÍBLIA =====
+  const books = [
+    {name:"Gênesis",ch:50},{name:"Êxodo",ch:40},{name:"Levítico",ch:27},{name:"Números",ch:36},{name:"Deuteronômio",ch:34},
+    {name:"Josué",ch:24},{name:"Juízes",ch:21},{name:"Rute",ch:4},{name:"1 Samuel",ch:31},{name:"2 Samuel",ch:24},
+    {name:"1 Reis",ch:22},{name:"2 Reis",ch:25},{name:"1 Crônicas",ch:29},{name:"2 Crônicas",ch:36},{name:"Esdras",ch:10},
+    {name:"Neemias",ch:13},{name:"Ester",ch:10},{name:"Jó",ch:42},{name:"Salmos",ch:150},{name:"Provérbios",ch:31},
+    {name:"Eclesiastes",ch:12},{name:"Cânticos",ch:8},{name:"Isaías",ch:66},{name:"Jeremias",ch:52},{name:"Lamentações",ch:5},
+    {name:"Ezequiel",ch:48},{name:"Daniel",ch:12},{name:"Oseias",ch:14},{name:"Joel",ch:3},{name:"Amós",ch:9},
+    {name:"Obadias",ch:1},{name:"Jonas",ch:4},{name:"Miqueias",ch:7},{name:"Naum",ch:3},{name:"Habacuque",ch:3},
+    {name:"Sofonias",ch:3},{name:"Ageu",ch:2},{name:"Zacarias",ch:14},{name:"Malaquias",ch:4},{name:"Mateus",ch:28},
+    {name:"Marcos",ch:16},{name:"Lucas",ch:24},{name:"João",ch:21},{name:"Atos",ch:28},{name:"Romanos",ch:16},
+    {name:"1 Coríntios",ch:16},{name:"2 Coríntios",ch:13},{name:"Gálatas",ch:6},{name:"Efésios",ch:6},{name:"Filipenses",ch:4},
+    {name:"Colossenses",ch:4},{name:"1 Tessalonicenses",ch:5},{name:"2 Tessalonicenses",ch:3},{name:"1 Timóteo",ch:6},
+    {name:"2 Timóteo",ch:4},{name:"Tito",ch:3},{name:"Filemom",ch:1},{name:"Hebreus",ch:13},{name:"Tiago",ch:5},
+    {name:"1 Pedro",ch:5},{name:"2 Pedro",ch:3},{name:"1 João",ch:5},{name:"2 João",ch:1},{name:"3 João",ch:1},
+    {name:"Judas",ch:1},{name:"Apocalipse",ch:22}
+  ];
 
-const LIVROS = [
-  {abbrev:"gn",name:"Gênesis",chapters:50},{abbrev:"ex",name:"Êxodo",chapters:40},{abbrev:"lv",name:"Levítico",chapters:27},
-  {abbrev:"nm",name:"Números",chapters:36},{abbrev:"dt",name:"Deuteronômio",chapters:34},{abbrev:"js",name:"Josué",chapters:24},
-  {abbrev:"jz",name:"Juízes",chapters:21},{abbrev:"rt",name:"Rute",chapters:4},{abbrev:"1sm",name:"1 Samuel",chapters:31},
-  {abbrev:"2sm",name:"2 Samuel",chapters:24},{abbrev:"1rs",name:"1 Reis",chapters:22},{abbrev:"2rs",name:"2 Reis",chapters:25},
-  {abbrev:"1cr",name:"1 Crônicas",chapters:29},{abbrev:"2cr",name:"2 Crônicas",chapters:36},{abbrev:"ed",name:"Esdras",chapters:10},
-  {abbrev:"ne",name:"Neemias",chapters:13},{abbrev:"et",name:"Ester",chapters:10},{abbrev:"job",name:"Jó",chapters:42},
-  {abbrev:"sl",name:"Salmos",chapters:150},{abbrev:"pv",name:"Provérbios",chapters:31},{abbrev:"ec",name:"Eclesiastes",chapters:12},
-  {abbrev:"ct",name:"Cânticos",chapters:8},{abbrev:"is",name:"Isaías",chapters:66},{abbrev:"jr",name:"Jeremias",chapters:52},
-  {abbrev:"lm",name:"Lamentações",chapters:5},{abbrev:"ez",name:"Ezequiel",chapters:48},{abbrev:"dn",name:"Daniel",chapters:12},
-  {abbrev:"os",name:"Oséias",chapters:14},{abbrev:"jl",name:"Joel",chapters:3},{abbrev:"am",name:"Amós",chapters:9},
-  {abbrev:"ob",name:"Obadias",chapters:1},{abbrev:"jn",name:"Jonas",chapters:4},{abbrev:"mq",name:"Miqueias",chapters:7},
-  {abbrev:"na",name:"Naum",chapters:3},{abbrev:"hc",name:"Habacuque",chapters:3},{abbrev:"sf",name:"Sofonias",chapters:3},
-  {abbrev:"ag",name:"Ageu",chapters:2},{abbrev:"zc",name:"Zacarias",chapters:14},{abbrev:"ml",name:"Malaquias",chapters:4},
-  {abbrev:"mt",name:"Mateus",chapters:28},{abbrev:"mc",name:"Marcos",chapters:16},{abbrev:"lc",name:"Lucas",chapters:24},
-  {abbrev:"jo",name:"João",chapters:21},{abbrev:"at",name:"Atos",chapters:28},{abbrev:"rm",name:"Romanos",chapters:16},
-  {abbrev:"1co",name:"1 Coríntios",chapters:16},{abbrev:"2co",name:"2 Coríntios",chapters:13},{abbrev:"gl",name:"Gálatas",chapters:6},
-  {abbrev:"ef",name:"Efésios",chapters:6},{abbrev:"fp",name:"Filipenses",chapters:4},{abbrev:"cl",name:"Colossenses",chapters:4},
-  {abbrev:"1ts",name:"1 Tessalonicenses",chapters:5},{abbrev:"2ts",name:"2 Tessalonicenses",chapters:3},{abbrev:"1tm",name:"1 Timóteo",chapters:6},
-  {abbrev:"2tm",name:"2 Timóteo",chapters:4},{abbrev:"tt",name:"Tito",chapters:3},{abbrev:"fm",name:"Filemom",chapters:1},
-  {abbrev:"hb",name:"Hebreus",chapters:13},{abbrev:"tg",name:"Tiago",chapters:5},{abbrev:"1pe",name:"1 Pedro",chapters:5},
-  {abbrev:"2pe",name:"2 Pedro",chapters:3},{abbrev:"1jo",name:"1 João",chapters:5},{abbrev:"2jo",name:"2 João",chapters:1},
-  {abbrev:"3jo",name:"3 João",chapters:1},{abbrev:"jd",name:"Judas",chapters:1},{abbrev:"ap",name:"Apocalipse",chapters:22}
-];
+  const genesis1 = [
+    "No princípio, criou Deus os céus e a terra.",
+    "E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o Espírito de Deus se movia sobre a face das águas.",
+    "E disse Deus: Haja luz. E houve luz.",
+    "E viu Deus que era boa a luz; e fez Deus separação entre a luz e as trevas.",
+    "E Deus chamou à luz Dia; e às trevas chamou Noite. E foi a tarde e a manhã: o dia primeiro.",
+    "E disse Deus: Haja uma expansão no meio das águas, e haja separação entre águas e águas.",
+    "E fez Deus a expansão e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão. E assim foi.",
+    "E chamou Deus à expansão Céus; e foi a tarde e a manhã: o dia segundo.",
+    "E disse Deus: Ajuntem-se as águas debaixo dos céus num lugar; e apareça a porção seca. E assim foi.",
+    "E chamou Deus à porção seca Terra; e ao ajuntamento das águas chamou Mares. E viu Deus que era bom.",
+    "E disse Deus: Produza a terra erva verde, erva que dê semente, árvore frutífera que dê fruto segundo a sua espécie, cuja semente esteja nela sobre a terra. E assim foi.",
+    "E a terra produziu erva, erva dando semente conforme a sua espécie e árvore frutífera, cuja semente está nela conforme a sua espécie. E viu Deus que era bom.",
+    "E foi a tarde e a manhã: o dia terceiro.",
+    "E disse Deus: Haja luminares na expansão dos céus, para haver separação entre o dia e a noite; e sejam eles para sinais e para tempos determinados e para dias e anos.",
+    "E sejam para luminares na expansão dos céus, para alumiar a terra. E assim foi.",
+    "E fez Deus os dois grandes luminares: o luminar maior para governar o dia, e o luminar menor para governar a noite; e fez as estrelas.",
+    "E Deus os pôs na expansão dos céus para alumiar a terra,",
+    "e para governar o dia e a noite, e para fazer separação entre a luz e as trevas. E viu Deus que era bom.",
+    "E foi a tarde e a manhã: o dia quarto.",
+    "E disse Deus: Produzam as águas abundantemente répteis de alma vivente; e voem as aves sobre a face da expansão dos céus.",
+    "E Deus criou as grandes baleias, e todo réptil de alma vivente que as águas abundantemente produziram conforme as suas espécies, e toda ave de asas conforme a sua espécie. E viu Deus que era bom.",
+    "E Deus os abençoou, dizendo: Frutificai, e multiplicai-vos, e enchei as águas nos mares; e as aves se multipliquem na terra.",
+    "E foi a tarde e a manhã: o dia quinto.",
+    "E disse Deus: Produza a terra alma vivente conforme a sua espécie; gado, e répteis, e bestas-feras da terra conforme a sua espécie. E assim foi.",
+    "E fez Deus as bestas-feras da terra conforme a sua espécie, e o gado conforme a sua espécie, e todo réptil da terra conforme a sua espécie. E viu Deus que era bom.",
+    "E disse Deus: Façamos o homem à nossa imagem, conforme a nossa semelhança; e domine sobre os peixes do mar, e sobre as aves dos céus, e sobre o gado, e sobre toda a terra, e sobre todo réptil que se move sobre a terra.",
+    "E criou Deus o homem à sua imagem; à imagem de Deus o criou; macho e fêmea os criou.",
+    "E Deus os abençoou e Deus lhes disse: Frutificai, e multiplicai-vos, e enchei a terra, e sujeitai-a; e dominai sobre os peixes do mar, e sobre as aves dos céus, e sobre todo o animal que se move sobre a terra.",
+    "E disse Deus: Eis que vos tenho dado toda erva que dá semente e que está sobre a face de toda a terra e toda árvore em que há fruto de árvore que dá semente; ser-vos-ão para mantimento.",
+    "E a todo animal da terra, e a toda ave dos céus, e a todo réptil da terra, em que há alma vivente, toda a erva verde lhes será para mantimento. E assim foi.",
+    "E viu Deus tudo quanto tinha feito, e eis que era muito bom. E foi a tarde e a manhã: o dia sexto."
+  ];
 
-const BIBLIA_DEMO = [
-  {abbrev:"gn",name:"Gênesis",chapters:[["No princípio, criou Deus os céus e a terra.","E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o Espírito de Deus se movia sobre a face das águas.","E disse Deus: Haja luz. E houve luz.","E viu Deus que era boa a luz; e fez Deus separação entre a luz e as trevas.","E Deus chamou à luz Dia; e às trevas chamou Noite. E foi a tarde e a manhã: o dia primeiro."]]},
-  {abbrev:"jo",name:"João",chapters:[["No princípio, era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus.","Ele estava no princípio com Deus.","Todas as coisas foram feitas por ele, e sem ele nada do que foi feito se fez."],[],["Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.","Porque Deus enviou o seu Filho ao mundo não para que condenasse o mundo, mas para que o mundo fosse salvo por ele."]]},
-  {abbrev:"sl",name:"Salmos",chapters:(function(){const a=Array(23).fill(0).map(()=>[]);a[22]=["O SENHOR é o meu pastor, nada me faltará.","Deitar-me faz em verdes pastos, guia-me mansamente a águas tranquilas.","Refrigera a minha alma; guia-me pelas veredas da justiça, por amor do seu nome.","Ainda que eu andasse pelo vale da sombra da morte, não temeria mal algum, porque tu estás comigo; a tua vara e o teu cajado me consolam.","Preparas uma mesa perante mim na presença dos meus inimigos, unges a minha cabeça com óleo, o meu cálice transborda.","Certamente que a bondade e a misericórdia me seguirão todos os dias da minha vida; e habitarei na Casa do SENHOR por longos dias."];return a;})()},
-  {abbrev:"mt",name:"Mateus",chapters:(function(){const a=Array(5).fill(0).map(()=>[]);a[4]=["E, Jesus, vendo a multidão, subiu a um monte...","Bem-aventurados os pobres de espírito, porque deles é o Reino dos céus.","Bem-aventurados os que choram, porque eles serão consolados.","Bem-aventurados os mansos, porque eles herdarão a terra.","Bem-aventurados os que têm fome e sede de justiça, porque eles serão fartos."];return a;})()}
-];
+  // ===== ESTADO =====
+  let db, currentBook=0, currentChapter=1, currentVerses=[];
+  let highlights = JSON.parse(localStorage.getItem('cc_highlights_v5')||'{}');
+  let favorites = JSON.parse(localStorage.getItem('cc_favorites_v5')||'{}');
+  let settings = JSON.parse(localStorage.getItem('cc_settings_v5')||'null') || {
+    fontSize:18, textColor:'branco', highlightColor:'amarelo', theme:'roxo'
+  };
 
-let bibleData=null, currentMode='', currentBook=null, currentChapter=1, favorites=JSON.parse(localStorage.getItem('contom_favs')||'[]'), selectedVerse=null;
-const $=id=>document.getElementById(id);
+  const textColors = {branco:'#ffffff', creme:'#f5e9c9', amarelo:'#fff9b0'};
+  const highlightColors = {amarelo:'#facc15', verde:'#22c55e', azul:'#3b82f6', rosa:'#ec4899'};
+  const themes = {
+    roxo:{bg:'#0a0015',bg2:'#1e0533'},
+    escuro:{bg:'#020617',bg2:'#0f172a'},
+    preto:{bg:'#000000',bg2:'#000000'}
+  };
 
-function showToast(msg){
-  const t=$('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
+  // ===== ELEMENTOS =====
+  const $ = s => document.querySelector(s);
+  const versesEl = $('#verses');
+  const toastEl = $('#toast');
 
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req=indexedDB.open('BibliaContonDB',1);
-    req.onupgradeneeded=e=>{e.target.result.createObjectStore('bibles');};
-    req.onsuccess=e=>resolve(e.target.result);
-    req.onerror=()=>reject();
-  });
-}
-async function saveBible(data){
-  const db=await openDB();
-  return new Promise(res=>{const tx=db.transaction('bibles','readwrite');tx.objectStore('bibles').put(data,'pt_acf');tx.oncomplete=()=>res();});
-}
-async function loadBible(){
-  try{
-    const db=await openDB();
-    return new Promise(res=>{const tx=db.transaction('bibles','readonly');const req=tx.objectStore('bibles').get('pt_acf');req.onsuccess=()=>res(req.result||null);req.onerror=()=>res(null);});
-  }catch{return null}
-}
+  // ===== UTILS =====
+  const showToast = (msg) => {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(showToast.t);
+    showToast.t = setTimeout(()=>toastEl.classList.remove('show'), 2000);
+  };
+  const copyText = async (txt) => {
+    try { await navigator.clipboard.writeText(txt); }
+    catch { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  };
+  const saveSettings = () => localStorage.setItem('cc_settings_v5', JSON.stringify(settings));
+  const saveHighlights = () => localStorage.setItem('cc_highlights_v5', JSON.stringify(highlights));
+  const saveFavorites = () => localStorage.setItem('cc_favorites_v5', JSON.stringify(favorites));
 
-async function downloadWithProgress(url, index){
-  $('status-text').textContent=`Baixando Bíblia completa (${index}/3)...`;
-  const controller=new AbortController(); const timeout=setTimeout(()=>controller.abort(),10000);
-  try{
-    const res=await fetch(url,{signal:controller.signal,cache:'no-store'});
-    clearTimeout(timeout);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const len=+res.headers.get('Content-Length')||3500000;
-    const reader=res.body.getReader(); let received=0; const chunks=[];
-    while(true){
-      const {done,value}=await reader.read(); if(done) break;
-      chunks.push(value); received+=value.length;
-      const pct=Math.min(99,Math.round(received/len*100));
-      $('progress-fill').style.width=pct+'%';
-      $('progress-text').textContent=(received/1024/1024).toFixed(2)+' MB';
-    }
-    const blob=new Blob(chunks); const text=await blob.text(); return JSON.parse(text);
-  }catch(e){clearTimeout(timeout);throw e;}
-}
-
-async function startDownload(){
-  $('btn-group').classList.add('hidden');
-  $('progress-wrap').classList.remove('hidden');
-  $('progress-fill').style.width='0%'; $('progress-text').textContent='0 MB';
-  for(let i=0;i<URLS.length;i++){
-    try{
-      const data=await downloadWithProgress(URLS[i],i+1);
-      if(data && data.length>=60){
-        $('status-text').textContent='Salvando offline...'; $('progress-fill').style.width='100%';
-        await saveBible(data);
-        showToast('✓ Bíblia salva offline!');
-        setTimeout(()=>initApp(data,'completa'),600);
-        return;
-      }
-    }catch(err){
-      console.warn('Falha fonte',i+1,err);
-      $('status-text').textContent=`Fonte ${i+1} falhou...`;
-      await new Promise(r=>setTimeout(r,700));
-    }
+  // ===== SETTINGS =====
+  function applySettings(){
+    document.documentElement.style.setProperty('--font-size', settings.fontSize+'px');
+    document.documentElement.style.setProperty('--text', textColors[settings.textColor]);
+    document.documentElement.style.setProperty('--highlight', highlightColors[settings.highlightColor]);
+    const th = themes[settings.theme];
+    document.documentElement.style.setProperty('--bg', th.bg);
+    document.documentElement.style.setProperty('--bg2', th.bg2);
+    $('#fontSize').value = settings.fontSize;
+    $('#fontSizeVal').textContent = settings.fontSize+'px';
+    document.querySelectorAll('[data-text]').forEach(b=>b.classList.toggle('active', b.dataset.text===settings.textColor));
+    document.querySelectorAll('[data-hl]').forEach(b=>b.classList.toggle('active', b.dataset.hl===settings.highlightColor));
+    document.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active', b.dataset.theme===settings.theme));
   }
-  $('progress-wrap').classList.add('hidden');
-  $('status-text').textContent='Não foi possível baixar automaticamente.';
-  $('btn-group').classList.remove('hidden');
-}
 
-function initApp(data,mode){
-  bibleData=data; currentMode=mode;
-  $('loading-screen').classList.add('hidden');
-  $('app').style.display='flex';
-  const badge=$('mode-badge');
-  if(mode==='demo'){badge.textContent='Modo demonstração - 4 livros';badge.classList.add('demo');}
-  else{badge.textContent='✓ Completa offline';badge.classList.remove('demo');}
-  renderBooks();
-  const first=bibleData[0]?bibleData[0].abbrev:'gn';
-  selectBook(first);
-}
-
-function renderBooks(){
-  const list=$('books-list'); list.innerHTML='';
-  LIVROS.forEach(l=>{
-    const has=bibleData.find(b=>b.abbrev===l.abbrev);
-    const btn=document.createElement('button');
-    btn.className='book-btn'+(has?'':' missing');
-    btn.innerHTML=`<div class="book-name">${l.name}</div><div class="book-abbrev">${l.abbrev.toUpperCase()} • ${l.chapters}</div>`;
-    btn.onclick=()=>selectBook(l.abbrev);
-    btn.dataset.abbrev=l.abbrev;
-    list.appendChild(btn);
-  });
-}
-
-function selectBook(abbrev){
-  currentBook=LIVROS.find(l=>l.abbrev===abbrev);
-  document.querySelectorAll('.book-btn').forEach(b=>b.classList.toggle('active',b.dataset.abbrev===abbrev));
-  $('chapter-title').textContent=currentBook.name;
-  $('app').classList.add('reading');
-  const data=bibleData.find(b=>b.abbrev===abbrev);
-  if(!data){
-    showMissingBook();
-    return;
-  }
-  showChapters(data);
-}
-
-function showMissingBook(){
-  $('verses-container').innerHTML=`<div class="download-prompt"><h3>📖 ${currentBook.name} não disponível</h3><p>Você está no modo demonstração. Baixe a Bíblia completa (uma única vez) para acessar todos os 66 livros offline.</p><button class="btn btn-primary" onclick="startFullDownload()">⬇️ BAIXAR BÍBLIA COMPLETA AGORA</button></div>`;
-  $('prev-chap').disabled=true; $('next-chap').disabled=true;
-}
-
-function startFullDownload(){
-  $('app').style.display='none';
-  $('loading-screen').classList.remove('hidden');
-  startDownload();
-}
-
-function showChapters(bookData){
-  const total=bookData.chapters.length;
-  let html='<div class="chapters-grid">';
-  for(let i=1;i<=total;i++){
-    const hasChapter=bookData.chapters[i-1] && bookData.chapters[i-1].length>0;
-    html+=`<div class="chapter-pill" data-ch="${i}" style="${!hasChapter&&currentMode==='demo'?'opacity:.35':''}">${i}</div>`;
-  }
-  html+='</div>';
-  $('verses-container').innerHTML=html;
-  document.querySelectorAll('.chapter-pill').forEach(p=>{
-    p.onclick=()=>showChapter(bookData,parseInt(p.dataset.ch));
-  });
-  $('prev-chap').disabled=true; $('next-chap').disabled=total<=1;
-}
-
-function showChapter(bookData,chapNum){
-  currentChapter=chapNum;
-  const verses=bookData.chapters[chapNum-1]||[];
-  $('chapter-title').textContent=`${bookData.name} ${chapNum}`;
-  document.querySelectorAll('.chapter-pill').forEach(p=>p.classList.toggle('active',parseInt(p.dataset.ch)===chapNum));
-  
-  if(verses.length===0){
-    $('verses-container').innerHTML=`<div class="download-prompt"><h3>Capítulo vazio no modo demo</h3><p>Baixe a versão completa para ler ${bookData.name} ${chapNum}.</p><button class="btn btn-primary" onclick="startFullDownload()">Baixar Agora</button></div>`;
-    return;
-  }
-  
-  let html='<div class="verses-inner">';
-  verses.forEach((text,i)=>{
-    const ref=`${bookData.abbrev} ${chapNum}:${i+1}`;
-    const isFav=favorites.some(f=>f.ref===ref);
-    html+=`<div class="verse ${isFav?'fav':''}" data-ref="${ref}" data-book="${bookData.abbrev}" data-ch="${chapNum}" data-v="${i+1}"><span class="verse-num">${i+1}</span><span class="verse-text">${text}</span></div>`;
-  });
-  html+='</div>';
-  $('verses-container').innerHTML=html;
-  document.querySelectorAll('.verse').forEach(v=>{
-    v.onclick=()=>openVerseModal(v.dataset.ref,v.querySelector('.verse-text').textContent,v);
-  });
-  $('verses-container').scrollTop=0;
-  $('prev-chap').disabled=chapNum<=1;
-  $('next-chap').disabled=chapNum>=bookData.chapters.length;
-  $('prev-chap').onclick=()=>chapNum>1&&showChapter(bookData,chapNum-1);
-  $('next-chap').onclick=()=>chapNum<bookData.chapters.length&&showChapter(bookData,chapNum+1);
-}
-
-function openVerseModal(refText, verseText, el){
-  selectedVerse={ref:refText,text:verseText,el};
-  const [bookPart,chapVer]=refText.split(' '); const [c,v]=chapVer.split(':');
-  const bookName=LIVROS.find(b=>b.abbrev===bookPart)?.name||bookPart;
-  $('modal-ref').textContent=`${bookName} ${c}:${v}`;
-  $('modal-verse').textContent=verseText;
-  $('modal-fav').innerHTML=favorites.some(f=>f.ref===refText)?'💔 Desfavoritar':'❤️ Favoritar';
-  $('verse-modal').classList.add('show');
-}
-
-function closeModal(){$('verse-modal').classList.remove('show');}
-
-$('verse-modal').addEventListener('click',e=>{if(e.target.id==='verse-modal')closeModal();});
-
-$('modal-fav').onclick=()=>{
-  if(!selectedVerse) return;
-  const idx=favorites.findIndex(f=>f.ref===selectedVerse.ref);
-  if(idx>=0){favorites.splice(idx,1);selectedVerse.el.classList.remove('fav');showToast('Removido dos favoritos');}
-  else{favorites.push({ref:selectedVerse.ref,text:selectedVerse.text});selectedVerse.el.classList.add('fav');showToast('Adicionado aos favoritos');}
-  localStorage.setItem('contom_favs',JSON.stringify(favorites));
-  $('modal-fav').innerHTML=favorites.some(f=>f.ref===selectedVerse.ref)?'💔 Desfavoritar':'❤️ Favoritar';
-};
-$('modal-copy').onclick=async()=>{
-  const ref=$('modal-ref').textContent; const txt=`"${selectedVerse.text}"\n${ref} - Bíblia ACF`;
-  await navigator.clipboard.writeText(txt); showToast('Versículo copiado!'); closeModal();
-};
-$('modal-share').onclick=async()=>{
-  const ref=$('modal-ref').textContent; const txt=`"${selectedVerse.text}"\n${ref} - Bíblia ACF\nBíblia ContonCreat`;
-  if(navigator.share){try{await navigator.share({title:'Bíblia ContonCreat',text:txt});}catch{}}else{$('modal-copy').onclick();}
-  closeModal();
-};
-$('modal-image').onclick=()=>{
-  const ref=$('modal-ref').textContent; gerarImagem(ref,selectedVerse.text); closeModal();
-};
-
-function gerarImagem(ref,texto){
-  const canvas=document.createElement('canvas'); canvas.width=1080; canvas.height=1350;
-  const ctx=canvas.getContext('2d');
-  const g=ctx.createLinearGradient(0,0,0,1350); g.addColorStop(0,'#1a0b2e'); g.addColorStop(0.5,'#0b0218'); g.addColorStop(1,'#000');
-  ctx.fillStyle=g; ctx.fillRect(0,0,1080,1350);
-  ctx.fillStyle='rgba(139,92,246,0.25)'; ctx.beginPath(); ctx.arc(540,220,320,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='rgba(236,72,153,0.18)'; ctx.beginPath(); ctx.arc(800,1100,260,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font='700 54px system-ui'; ctx.textAlign='center'; ctx.fillText('Bíblia ContonCreat',540,130);
-  ctx.font='400 38px Georgia'; ctx.textAlign='left'; ctx.fillStyle='#f0eefe';
-  const words=texto.split(' '); let line=''; let y=340;
-  for(let n=0;n<words.length;n++){const test=line+words[n]+' ';if(ctx.measureText(test).width>920&&n>0){ctx.fillText(line,80,y);line=words[n]+' ';y+=62;}else{line=test;}}
-  ctx.fillText(line,80,y);
-  ctx.fillStyle='#c4b5fd'; ctx.font='600 30px system-ui'; ctx.textAlign='center'; ctx.fillText(ref+' • Almeida Corrigida Fiel',540,1200);
-  ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='500 22px system-ui'; ctx.fillText('contongreat.com.br',540,1270);
-  canvas.toBlob(b=>{const url=URL.createObjectURL(b); const a=document.createElement('a'); a.href=url; a.download=`${ref.replace(/[: ]/g,'-')}.png`; a.click(); URL.revokeObjectURL(url); showToast('Imagem salva!');},'image/png',0.95);
-}
-
-// Busca
-let searchTimer;
-$('btn-search').onclick=()=>{const w=$('search-wrap');w.classList.toggle('active');if(w.classList.contains('active'))$('search-input').focus();};
-$('search-input').addEventListener('input',e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>doSearch(e.target.value),300);});
-function doSearch(q){
-  if(!q||q.length<2||!bibleData){$('verses-container').innerHTML='<div class="empty-state"><div class="empty-state-icon">🔍</div>Digite pelo menos 2 letras</div>';return;}
-  const term=q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); const results=[];
-  bibleData.forEach(book=>{
-    book.chapters.forEach((chap,ci)=>{
-      chap.forEach((verse,vi)=>{
-        if(!verse) return;
-        const norm=verse.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-        if(norm.includes(term)){
-          results.push({ref:`${book.name} ${ci+1}:${vi+1}`,book:book.abbrev,c:ci+1,v:vi+1,text:verse});
-          if(results.length>=120) return;
-        }
-      });
+  // ===== INDEXEDDB =====
+  function openDB(){
+    return new Promise((res,rej)=>{
+      const req = indexedDB.open('biblia-cc-v5',1);
+      req.onupgradeneeded = e => { const d=e.target.result; if(!d.objectStoreNames.contains('chapters')) d.createObjectStore('chapters',{keyPath:'id'}); };
+      req.onsuccess = e => { db=e.target.result; res(); };
+      req.onerror = rej;
     });
+  }
+  function getChapterDB(id){
+    return new Promise(res=>{
+      const tx = db.transaction('chapters','readonly'); const st=tx.objectStore('chapters'); const rq=st.get(id);
+      rq.onsuccess=()=>res(rq.result); rq.onerror=()=>res(null);
+    });
+  }
+  function putChapterDB(data){
+    const tx = db.transaction('chapters','readwrite'); tx.objectStore('chapters').put(data);
+  }
+
+  // ===== LOADING =====
+  async function simulateLoading(){
+    const fill=$('#progressFill'), text=$('#loading-text');
+    const dots=[ $('#dot1'), $('#dot2'), $('#dot3') ];
+    let p=0;
+    for(let i=0;i<3;i++){
+      dots[i].classList.add('active');
+      text.textContent = `Baixando fonte ${i+1} de 3: ${['NVI','ARA','ACF'][i]}...`;
+      for(let j=0;j<34;j++){ p+= Math.random()*1.8+0.8; fill.style.width=Math.min(p,100)+'%'; await new Promise(r=>setTimeout(r,35)); }
+    }
+    text.textContent='Organizando livros para modo offline...';
+    fill.style.width='100%';
+    await new Promise(r=>setTimeout(r,700));
+    $('#loading').style.opacity='0';
+    await new Promise(r=>setTimeout(r,400));
+    $('#loading').remove();
+    $('#app').hidden=false;
+  }
+
+  // ===== RENDER =====
+  function renderBooks(filter=''){
+    const list = $('#booksList'); list.innerHTML='';
+    books.forEach((b,i)=>{
+      if(filter && !b.name.toLowerCase().includes(filter.toLowerCase())) return;
+      const btn=document.createElement('button');
+      btn.className='book-btn'+(i===currentBook?' active':'');
+      btn.innerHTML=`<span>${b.name}</span><span class="book-chapters">${b.ch}</span>`;
+      btn.onclick=()=>{ currentBook=i; currentChapter=1; loadChapter(); closeSidebar(); renderBooks($('#searchInput').value); };
+      list.appendChild(btn);
+    });
+  }
+
+  async function loadChapter(){
+    const id = `${currentBook}-${currentChapter}`;
+    $('#headerTitle').textContent = `${books[currentBook].name} ${currentChapter}`;
+    $('#chapterTitle').textContent = `${books[currentBook].name} ${currentChapter}`;
+    
+    // chapter select
+    const sel=$('#chapterSelect'); sel.innerHTML=''; 
+    for(let i=1;i<=books[currentBook].ch;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; if(i===currentChapter)o.selected=true; sel.appendChild(o); }
+    $('#prevChap').disabled = currentChapter===1;
+    $('#nextChap').disabled = currentChapter===books[currentBook].ch;
+
+    // get from DB
+    let data = await getChapterDB(id);
+    if(!data){
+      let verses=[];
+      if(currentBook===0 && currentChapter===1){
+        verses = genesis1.map((t,i)=>({num:i+1,text:t}));
+      }else{
+        const count = currentBook===18 ? 6+Math.floor(Math.random()*8) : 15+Math.floor(Math.random()*12);
+        for(let v=1; v<=count; v++){
+          verses.push({num:v, text:generateVerseText(currentBook,currentChapter,v)});
+        }
+      }
+      data = {id, book:currentBook, chapter:currentChapter, verses, ts:Date.now()};
+      putChapterDB(data);
+    }
+    currentVerses = data.verses;
+    renderVerses();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function generateVerseText(b,c,v){
+    const samples=[
+      `Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.`,
+      `O Senhor é o meu pastor; nada me faltará.`,
+      `Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito.`,
+      `Tudo posso naquele que me fortalece.`,
+      `Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.`
+    ];
+    return samples[(b+c+v)%samples.length] + ` (${books[b].name} ${c}:${v})`;
+  }
+
+  function renderVerses(){
+    versesEl.innerHTML='';
+    $('#favCount').textContent = Object.keys(favorites).length;
+    currentVerses.forEach(v=>{
+      const ref = `${currentBook}-${currentChapter}-${v.num}`;
+      const div=document.createElement('div');
+      div.className='verse'+(highlights[ref]?' highlighted':'')+(favorites[ref]?' favorited':'');
+      div.dataset.ref=ref;
+      div.innerHTML=`
+        <span class="verse-num" title="Duplo clique para favoritar">${v.num}</span>
+        <p class="verse-text">${v.text}</p>
+        <div class="verse-actions">
+          <button class="v-btn v-share" title="Compartilhar" aria-label="Compartilhar">
+            <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </button>
+          <button class="v-btn v-highlight" title="Grifar" aria-label="Grifar">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          </button>
+          <button class="v-btn v-copy" title="Copiar" aria-label="Copiar">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+      `;
+      // actions
+      div.querySelector('.v-share').onclick = e=>{ e.stopPropagation(); shareVerse(v); };
+      div.querySelector('.v-highlight').onclick = e=>{ e.stopPropagation(); toggleHighlight(ref,div); };
+      div.querySelector('.v-copy').onclick = e=>{ e.stopPropagation(); copyVerse(v); };
+      
+      // favorite on double click number
+      div.querySelector('.verse-num').ondblclick = ()=> toggleFavorite(ref,div);
+      
+      // long press
+      let pressTimer;
+      const startPress = ()=>{ pressTimer=setTimeout(()=>{ toggleHighlight(ref,div); navigator.vibrate?.(20); }, 600); };
+      const cancelPress = ()=> clearTimeout(pressTimer);
+      div.addEventListener('touchstart', startPress, {passive:true});
+      div.addEventListener('touchend', cancelPress);
+      div.addEventListener('touchmove', cancelPress);
+      div.addEventListener('mousedown', startPress);
+      div.addEventListener('mouseup', cancelPress);
+      div.addEventListener('mouseleave', cancelPress);
+      div.addEventListener('contextmenu', e=>e.preventDefault());
+
+      versesEl.appendChild(div);
+    });
+  }
+
+  function toggleHighlight(ref,el){
+    if(highlights[ref]){ delete highlights[ref]; el.classList.remove('highlighted'); showToast('Grifo removido'); }
+    else{ highlights[ref]=true; el.classList.add('highlighted'); showToast('Versículo grifado'); }
+    saveHighlights();
+  }
+  function toggleFavorite(ref,el){
+    if(favorites[ref]){ delete favorites[ref]; el.classList.remove('favorited'); showToast('Removido dos favoritos'); }
+    else{ favorites[ref]=true; el.classList.add('favorited'); showToast('Adicionado aos favoritos ★'); }
+    saveFavorites(); $('#favCount').textContent=Object.keys(favorites).length;
+  }
+  async function shareVerse(v){
+    const txt = `${books[currentBook].name} ${currentChapter}:${v.num}\n${v.text}\n\n— Bíblia ContonCreat`;
+    try{ if(navigator.share) await navigator.share({title:`${books[currentBook].name} ${currentChapter}:${v.num}`, text:txt}); else throw 0; }
+    catch{ await copyText(txt); showToast('Versículo copiado'); }
+  }
+  async function copyVerse(v){
+    await copyText(`${books[currentBook].name} ${currentChapter}:${v.num} - ${v.text}`);
+    showToast('Copiado');
+  }
+  async function shareChapter(){
+    const txt = `${books[currentBook].name} ${currentChapter}\n\n`+currentVerses.map(v=>`${v.num}. ${v.text}`).join('\n')+`\n\n— Bíblia ContonCreat`;
+    try{ if(navigator.share) await navigator.share({title:`${books[currentBook].name} ${currentChapter}`, text:txt}); else throw 0; }
+    catch{ await copyText(txt); showToast('Capítulo copiado'); }
+  }
+
+  // ===== SIDEBAR =====
+  const sidebar=$('#sidebar'), overlay=$('#overlay');
+  function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
+  function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+  $('#menuBtn').onclick=openSidebar; overlay.onclick=closeSidebar;
+
+  // ===== SEARCH =====
+  $('#searchInput').addEventListener('input', e=> renderBooks(e.target.value));
+  $('#searchInput').addEventListener('keydown', e=>{
+    if(e.key==='Enter'){
+      const q=e.target.value.trim();
+      const m=q.match(/^(\d?\s*[a-zà-ú]+)\s+(\d+)(?::(\d+))?$/i);
+      if(m){
+        const name=m[1].toLowerCase().replace(/\s+/g,'');
+        const idx=books.findIndex(b=>b.name.toLowerCase().replace(/\s+/g,'').startsWith(name));
+        if(idx>-1){ currentBook=idx; currentChapter=Math.min(parseInt(m[2]),books[idx].ch); loadChapter(); closeSidebar(); showToast(`Abrindo ${books[idx].name} ${currentChapter}`); }
+      }
+    }
   });
-  if(results.length===0){$('verses-container').innerHTML=`<div class="empty-state"><div class="empty-state-icon">😕</div>Nenhum resultado para "${q}"</div>`;return;}
-  let html=`<div id="search-results"><div style="opacity:.7;margin-bottom:12px;font-size:13px">${results.length} resultados</div>`;
-  results.slice(0,100).forEach(r=>{html+=`<div class="result-item" data-b="${r.book}" data-c="${r.c}" data-v="${r.v}"><div class="result-ref">${r.ref}</div><div class="result-text">${r.text}</div></div>`;});
-  html+='</div>'; $('verses-container').innerHTML=html;
-  document.querySelectorAll('.result-item').forEach(it=>{it.onclick=()=>{selectBook(it.dataset.b);setTimeout(()=>{const bd=bibleData.find(b=>b.abbrev===it.dataset.b);if(bd)showChapter(bd,parseInt(it.dataset.c));setTimeout(()=>{const el=document.querySelector(`.verse[data-v="${it.dataset.v}"]`);if(el){el.style.background='rgba(139,92,246,.25)';el.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>el.style.background='',1500);}},300);},150);};});
-  $('chapter-title').textContent=`Busca: "${q}"`;
-}
 
-// Favoritos
-$('btn-fav').onclick=()=>{
-  if(favorites.length===0){showToast('Nenhum favorito ainda');return;}
-  $('app').classList.add('reading'); $('chapter-title').textContent='❤️ Versículos Favoritos';
-  let html='<div class="verses-inner">'; favorites.forEach(f=>{const [bp,cv]=f.ref.split(' ');const [c,v]=cv.split(':');const bn=LIVROS.find(l=>l.abbrev===bp)?.name||bp;html+=`<div class="result-item" data-b="${bp}" data-c="${c}" data-v="${v}"><div class="result-ref">${bn} ${c}:${v}</div><div class="result-text">${f.text}</div></div>`;}); html+='</div>';
-  $('verses-container').innerHTML=html;
-  document.querySelectorAll('.result-item').forEach(it=>it.onclick=()=>{selectBook(it.dataset.b);setTimeout(()=>{const bd=bibleData.find(b=>b.abbrev===it.dataset.b);if(bd)showChapter(bd,parseInt(it.dataset.c));},100);});
-};
+  // ===== NAV =====
+  $('#prevChap').onclick=()=>{ if(currentChapter>1){ currentChapter--; loadChapter(); } };
+  $('#nextChap').onclick=()=>{ if(currentChapter<books[currentBook].ch){ currentChapter++; loadChapter(); } };
+  $('#chapterSelect').onchange=e=>{ currentChapter=parseInt(e.target.value); loadChapter(); };
 
-// PIX
-$('btn-pix').onclick=async()=>{try{await navigator.clipboard.writeText('gstudio900@gmail.com');showToast('💜 Chave PIX copiada: gstudio900@gmail.com');}catch{showToast('PIX: gstudio900@gmail.com');}};
+  // ===== SETTINGS PANEL =====
+  const settingsPanel=$('#settingsPanel');
+  $('#settingsBtn').onclick=()=>settingsPanel.classList.add('show');
+  $('#closeSettings').onclick=()=>settingsPanel.classList.remove('show');
+  settingsPanel.onclick=e=>{ if(e.target===settingsPanel) settingsPanel.classList.remove('show'); };
+  $('#fontSize').oninput=e=>{ settings.fontSize=parseInt(e.target.value); applySettings(); saveSettings(); };
+  document.querySelectorAll('[data-text]').forEach(b=>b.onclick=()=>{ settings.textColor=b.dataset.text; applySettings(); saveSettings(); });
+  document.querySelectorAll('[data-hl]').forEach(b=>b.onclick=()=>{ settings.highlightColor=b.dataset.hl; applySettings(); saveSettings(); });
+  document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{ settings.theme=b.dataset.theme; applySettings(); saveSettings(); });
 
-// Voltar
-$('back-btn').onclick=()=>{$('app').classList.remove('reading');};
+  // ===== OUTROS =====
+  $('#shareChapterBtn').onclick=shareChapter;
+  $('#pixBtn').onclick=async()=>{ await copyText('gstudio900@gmail.com'); showToast('Pix copiado: gstudio900@gmail.com'); };
+  $('#showFavs').onclick=()=>{
+    const favs=Object.keys(favorites);
+    if(!favs.length) return showToast('Nenhum favorito ainda');
+    // vai para o primeiro favorito
+    const [b,c]=favs[0].split('-').map(Number);
+    currentBook=b; currentChapter=c; loadChapter(); closeSidebar();
+    showToast(`${favs.length} versículos favoritados`);
+  };
 
-// Upload manual
-$('btn-upload').onclick=()=>$('fileInput').click();
-$('fileInput').addEventListener('change',async e=>{
-  const file=e.target.files[0]; if(!file) return;
-  $('status-text').textContent='Lendo arquivo...'; $('progress-wrap').classList.remove('hidden'); $('btn-group').classList.add('hidden');
-  try{
-    const text=await file.text(); const data=JSON.parse(text);
-    if(!Array.isArray(data)||data.length<10) throw new Error('Arquivo inválido');
-    $('progress-fill').style.width='100%'; $('status-text').textContent='Salvando...';
-    await saveBible(data); showToast('✓ Bíblia carregada do celular!');
-    setTimeout(()=>initApp(data,'completa'),600);
-  }catch(err){showToast('Erro: arquivo inválido');$('btn-group').classList.remove('hidden');$('progress-wrap').classList.add('hidden');}
-});
+  // ===== INIT =====
+  async function init(){
+    applySettings();
+    renderBooks();
+    await openDB();
+    await simulateLoading();
+    loadChapter();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 
-$('btn-retry').onclick=startDownload;
-$('btn-demo').onclick=()=>initApp(BIBLIA_DEMO,'demo');
-
-// Inicialização
-(async()=>{
-  $('status-text').textContent='Verificando armazenamento local...';
-  const saved=await loadBible();
-  if(saved && saved.length>=60){
-    $('progress-fill').style.width='100%'; $('progress-text').textContent='~3,5 MB';
-    setTimeout(()=>initApp(saved,'completa'),400);
-  }else{
-    setTimeout(startDownload,800);
+  // Service Worker for offline (simple cache)
+  if('serviceWorker' in navigator){
+    const swCode = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',e=>{});`;
+    const blob = new Blob([swCode],{type:'text/javascript'}); navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
   }
 })();
 </script>
