@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Bíblia ContonCreat – ARC</title>
+<meta name="theme-color" content="#050507">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+html,body{height:100%;background:#050507}
+*{ -webkit-tap-highlight-color:transparent }
+body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.verso{scroll-margin-top:120px}
+.verso.ativo p{color:#e9d5ff}
+*::selection{background:rgba(124,58,237,.3)}
+</style>
+</head>
+<body class="bg-[#050507] text-zinc-100 antialiased">
+<div id="app" class="min-h-screen flex flex-col">
+<header class="sticky top-0 z-40 border-b border-white/5 bg-black/70 backdrop-blur-2xl">
+  <div class="mx-auto max-w-3xl px-4 h-[62px] flex items-center gap-3">
+    <div class="size-10 rounded-2xl bg-gradient-to-br from-[#7c3aed] to-violet-900 shadow-[0_0_30px_rgba(124,58,237,.35)] grid place-items-center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2">
+        <h1 class="text-[16px] font-semibold tracking-tight">Bíblia ContonCreat</h1>
+        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-violet-500/15 text-violet-300 border border-violet-500/25">ARC</span>
+      </div>
+      <button id="statusBtn" class="w-full text-left">
+        <p id="status" class="text-[11px] leading-4 text-zinc-400 truncate">Iniciando...</p>
+      </button>
+    </div>
+    <button id="btnBusca" class="size-9 grid place-items-center rounded-xl hover:bg-white/5 active:bg-white/10 transition shrink-0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </button>
+    <button id="btnFav" class="size-9 grid place-items-center rounded-xl hover:bg-white/5 active:bg-white/10 transition shrink-0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 17-5 3 1-5.5-4-4 5.5-.5L12 5l2.5 5 5.5.5-4 4 1 5.5z"/></svg>
+    </button>
+    <button id="btnApoie" class="h-8 px-3.5 rounded-full bg-[#7c3aed] hover:bg-[#6d28d9] text-[12px] font-medium shadow-[0_6px_20px_rgba(124,58,237,.35)] active:scale-95 transition">Apoie</button>
+  </div>
+</header>
+
+<nav class="sticky top-[62px] z-30 border-b border-white/[0.04] bg-[#050507]/80 backdrop-blur-xl">
+  <div class="mx-auto max-w-3xl px-2 h-[48px] flex items-center gap-1">
+    <button id="prevCap" class="size-9 grid place-items-center rounded-lg hover:bg-white/5 active:scale-90 transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
+    <button id="seletorLivro" class="flex-1 min-w-0 h-9 px-3 rounded-lg hover:bg-white/5 transition">
+      <div class="flex items-baseline justify-center gap-1.5">
+        <span id="tituloLivro" class="font-medium truncate text-[15px]">João 3</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </button>
+    <button id="nextCap" class="size-9 grid place-items-center rounded-lg hover:bg-white/5 active:scale-90 transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+  </div>
+</nav>
+
+<main class="flex-1">
+  <div class="mx-auto max-w-3xl px-5 py-7">
+    <div id="versiculos" class="space-y-1.5"></div>
+    <div class="h-32"></div>
+  </div>
+</main>
+
+<div id="toolbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden">
+  <div class="flex items-center gap-1 p-1.5 rounded-2xl bg-zinc-900/90 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,.6)]">
+    <button data-act="fav" class="flex items-center gap-1.5 px-3 h-10 rounded-xl hover:bg-white/5 active:bg-white/10 transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 17-5 3 1-5.5-4-4 5.5-.5L12 5l2.5 5 5.5.5-4 4 1 5.5z"/></svg><span class="text-xs pr-0.5">Salvar</span></button>
+    <div class="w-px h-6 bg-white/10 mx-0.5"></div>
+    <button data-act="share" title="Compartilhar" class="size-10 grid place-items-center rounded-xl hover:bg-white/5 active:bg-white/10 transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+    <button data-act="copy" title="Copiar" class="size-10 grid place-items-center rounded-xl hover:bg-white/5 active:bg-white/10 transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+    <button data-act="img" title="Imagem" class="size-10 grid place-items-center rounded-xl hover:bg-white/5 active:bg-white/10 transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL BUSCA -->
+<div id="modalBusca" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-md" data-close="busca"></div>
+  <div class="relative mx-auto mt-[8vh] w-[92%] max-w-2xl max-h-[84vh] flex flex-col rounded-[28px] bg-[#0a0a0f] border border-white/10 shadow-2xl overflow-hidden">
+    <div class="p-4 border-b border-white/5">
+      <div class="flex items-center gap-2">
+        <div class="flex-1 flex items-center gap-2.5 h-12 px-3.5 rounded-2xl bg-white/[0.04] border border-white/10 focus-within:border-violet-500/50 transition">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="inputBusca" placeholder="Buscar palavra, versículo ou tema..." class="w-full bg-transparent outline-none text-[15px] placeholder-zinc-500">
+        </div>
+        <button data-close="busca" class="size-10 grid place-items-center rounded-xl hover:bg-white/5 text-zinc-400">✕</button>
+      </div>
+    </div>
+    <div id="resultadosBusca" class="overflow-y-auto no-scrollbar p-3 space-y-2">
+      <p class="text-center text-zinc-500 text-sm py-10">Digite para buscar em toda a Bíblia</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LIVROS -->
+<div id="modalLivros" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-md" data-close="livros"></div>
+  <div class="relative mx-auto mt-[6vh] w-[94%] max-w-3xl max-h-[88vh] flex flex-col rounded-[28px] bg-[#0a0a0f] border border-white/10 shadow-2xl overflow-hidden">
+    <div class="p-5 border-b border-white/5 flex items-center justify-between">
+      <h2 class="text-lg font-semibold">Escolher livro</h2>
+      <button data-close="livros" class="size-9 grid place-items-center rounded-lg hover:bg-white/5 text-zinc-400">✕</button>
+    </div>
+    <div class="p-4 overflow-y-auto no-scrollbar">
+      <div id="gridLivros" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+      <div id="gridCapitulos" class="hidden mt-6">
+        <button id="voltarLivros" class="mb-3 text-sm text-violet-400 hover:text-violet-300">← Voltar</button>
+        <h3 id="tituloCapitulos" class="font-medium mb-3"></h3>
+        <div id="caps" class="grid grid-cols-7 sm:grid-cols-10 gap-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FAVORITOS -->
+<div id="modalFav" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-md" data-close="fav"></div>
+  <div class="relative mx-auto mt-[8vh] w-[92%] max-w-xl max-h-[80vh] flex flex-col rounded-[28px] bg-[#0a0a0f] border border-white/10 shadow-2xl overflow-hidden">
+    <div class="p-5 border-b border-white/5 flex items-center justify-between">
+      <h2 class="text-lg font-semibold">Favoritos</h2>
+      <button data-close="fav" class="size-9 grid place-items-center rounded-lg hover:bg-white/5 text-zinc-400">✕</button>
+    </div>
+    <div id="listaFav" class="p-4 overflow-y-auto no-scrollbar space-y-3"></div>
+  </div>
+</div>
+
+<!-- MODAL APOIE -->
+<div id="modalApoie" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-md" data-close="apoie"></div>
+  <div class="relative mx-auto mt-[15vh] w-[90%] max-w-sm rounded-[28px] bg-[#0a0a0f] border border-white/10 shadow-2xl overflow-hidden">
+    <div class="p-[1px] bg-gradient-to-b from-[#7c3aed] to-transparent rounded-[28px]">
+      <div class="bg-[#0a0a0f] rounded-[27px] p-6">
+        <div class="size-12 rounded-2xl bg-gradient-to-br from-[#7c3aed] to-violet-800 grid place-items-center mb-4 shadow-[0_0_30px_rgba(124,58,237,.4)]">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+        </div>
+        <h2 class="text-xl font-semibold mb-1">Apoie este projeto</h2>
+        <p class="text-zinc-400 text-sm mb-5">Sua ajuda mantém o app 100% gratuito e sem anúncios.</p>
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+          <p class="text-[11px] uppercase tracking-wider text-zinc-500 mb-1">Chave Pix (E-mail)</p>
+          <p class="font-mono text-[15px] text-violet-300">gstudio900@gmail.com</p>
+        </div>
+        <button id="copiarPix" class="mt-4 w-full h-12 rounded-xl bg-[#7c3aed] hover:bg-[#6d28d9] font-medium active:scale-[.98] transition">Copiar chave Pix</button>
+        <button data-close="apoie" class="mt-2 w-full h-10 rounded-xl hover:bg-white/5 text-sm text-zinc-400">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BIBLIA_MINIMA = [
+  {abbrev:"gn",name:"Gênesis",chapters:[["No princípio, criou Deus os céus e a terra.","E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o Espírito de Deus se movia sobre a face das águas.","E disse Deus: Haja luz. E houve luz.","E viu Deus que era boa a luz; e fez Deus separação entre a luz e as trevas.","E Deus chamou à luz Dia; e às trevas chamou Noite. E foi a tarde e a manhã: o dia primeiro.","E disse Deus: Haja uma expansão no meio das águas, e haja separação entre águas e águas.","E fez Deus a expansão e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão. E assim foi.","E chamou Deus à expansão Céus; e foi a tarde e a manhã: o dia segundo.","E disse Deus: Ajuntem-se as águas debaixo dos céus num lugar; e apareça a porção seca. E assim foi.","E chamou Deus à porção seca Terra; e ao ajuntamento das águas chamou Mares. E viu Deus que era bom.","E disse Deus: Produza a terra erva verde, erva que dê semente, árvore frutífera que dê fruto segundo a sua espécie, cuja semente esteja nela sobre a terra. E assim foi.","E a terra produziu erva, erva dando semente conforme a sua espécie e árvore frutífera, cuja semente está nela conforme a sua espécie. E viu Deus que era bom.","E foi a tarde e a manhã: o dia terceiro.","E disse Deus: Haja luminares na expansão dos céus, para haver separação entre o dia e a noite; e sejam eles para sinais e para tempos determinados e para dias e anos.","E sejam para luminares na expansão dos céus, para alumiar a terra. E assim foi.","E fez Deus os dois grandes luminares: o luminar maior para governar o dia, e o luminar menor para governar a noite; e fez as estrelas.","E Deus os pôs na expansão dos céus para alumiar a terra,","e para governar o dia e a noite, e para fazer separação entre a luz e as trevas. E viu Deus que era bom.","E foi a tarde e a manhã: o dia quarto.","E disse Deus: Produzam as águas abundantemente répteis de alma vivente; e voem as aves sobre a face da expansão dos céus.","E Deus criou as grandes baleias, e todo réptil de alma vivente que as águas abundantemente produziram conforme as suas espécies, e toda ave de asas conforme a sua espécie. E viu Deus que era bom.","E Deus os abençoou, dizendo: Frutificai, e multiplicai-vos, e enchei as águas nos mares; e as aves se multipliquem na terra.","E foi a tarde e a manhã: o dia quinto.","E disse Deus: Produza a terra alma vivente conforme a sua espécie; gado, e répteis, e bestas-feras da terra conforme a sua espécie. E assim foi.","E fez Deus as bestas-feras da terra conforme a sua espécie, e o gado conforme a sua espécie, e todo o réptil da terra conforme a sua espécie. E viu Deus que era bom.","E disse Deus: Façamos o homem à nossa imagem, conforme a nossa semelhança; e domine sobre os peixes do mar, e sobre as aves dos céus, e sobre o gado, e sobre toda a terra, e sobre todo réptil que se move sobre a terra.","E criou Deus o homem à sua imagem; à imagem de Deus o criou; macho e fêmea os criou.","E Deus os abençoou e Deus lhes disse: Frutificai, e multiplicai-vos, e enchei a terra, e sujeitai-a; e dominai sobre os peixes do mar, e sobre as aves dos céus, e sobre todo o animal que se move sobre a terra.","E disse Deus: Eis que vos tenho dado toda erva que dá semente e que está sobre a face de toda a terra e toda árvore em que há fruto de árvore que dá semente; ser-vos-ão para mantimento.","E a todo animal da terra, e a toda ave dos céus, e a todo réptil da terra, em que há alma vivente, toda a erva verde lhes será para mantimento. E assim foi.","E viu Deus tudo quanto tinha feito, e eis que era muito bom; e foi a tarde e a manhã: o dia sexto."]]},
+  {abbrev:"sl",name:"Salmos",chapters:[...Array(22).fill(0).map(() => []),["O SENHOR é o meu pastor; nada me faltará.","Deitar-me faz em verdes pastos, guia-me mansamente a águas tranquilas.","Refrigera a minha alma; guia-me pelas veredas da justiça por amor do seu nome.","Ainda que eu andasse pelo vale da sombra da morte, não temeria mal algum, porque tu estás comigo; a tua vara e o teu cajado me consolam.","Preparas uma mesa perante mim na presença dos meus inimigos, unges a minha cabeça com óleo, o meu cálice transborda.","Certamente que a bondade e a misericórdia me seguirão todos os dias da minha vida; e habitarei na Casa do SENHOR por longos dias."]]},
+  {abbrev:"mt",name:"Mateus",chapters:[...Array(4).fill(0).map(()=>[]),["E Jesus, vendo a multidão, subiu a um monte, e, assentando-se, aproximaram-se dele os seus discípulos;","e, abrindo a boca, os ensinava, dizendo:","Bem-aventurados os pobres de espírito, porque deles é o Reino dos céus;","bem-aventurados os que choram, porque eles serão consolados;","bem-aventurados os mansos, porque eles herdarão a terra;","bem-aventurados os que têm fome e sede de justiça, porque eles serão fartos;","bem-aventurados os misericordiosos, porque eles alcançarão misericórdia;","bem-aventurados os limpos de coração, porque eles verão a Deus;","bem-aventurados os pacificadores, porque eles serão chamados filhos de Deus;","bem-aventurados os que sofrem perseguição por causa da justiça, porque deles é o Reino dos céus;","bem-aventurados sois vós quando vos injuriarem, e perseguirem, e, mentindo, disserem todo o mal contra vós, por minha causa.","Exultai e alegrai-vos, porque é grande o vosso galardão nos céus; porque assim perseguiram os profetas que foram antes de vós.","Vós sois o sal da terra; e, se o sal for insípido, com que se há de salgar? Para nada mais presta, senão para se lançar fora e ser pisado pelos homens.","Vós sois a luz do mundo; não se pode esconder uma cidade edificada sobre um monte;","nem se acende a candeia e se coloca debaixo do alqueire, mas, no velador, e dá luz a todos que estão na casa.","Assim resplandeça a vossa luz diante dos homens, para que vejam as vossas boas obras e glorifiquem o vosso Pai, que está nos céus.","Não cuideis que vim destruir a lei ou os profetas; não vim anular, mas cumprir.","Porque em verdade vos digo que, até que o céu e a terra passem, nem um jota ou um til se omitirá da lei sem que tudo seja cumprido.","Qualquer, pois, que violar um destes menores mandamentos e assim ensinar aos homens será chamado o menor no Reino dos céus; aquele, porém, que os cumprir e ensinar será chamado grande no Reino dos céus.","Porque vos digo que, se a vossa justiça não exceder a dos escribas e fariseus, de modo nenhum entrareis no Reino dos céus.","Ouvistes que foi dito aos antigos: Não matarás; mas qualquer que matar será réu de juízo.","Eu, porém, vos digo que qualquer que, sem motivo, se encolerizar contra seu irmão será réu de juízo, e qualquer que chamar a seu irmão de raca será réu do sinédrio; e qualquer que lhe chamar de louco será réu do fogo do inferno.","Portanto, se trouxeres a tua oferta ao altar e aí te lembrares de que teu irmão tem alguma coisa contra ti,","deixa ali diante do altar a tua oferta, e vai reconciliar-te primeiro com teu irmão, e depois vem, e apresenta a tua oferta.","Concilia-te depressa com o teu adversário, enquanto estás no caminho com ele, para que não aconteça que o adversário te entregue ao juiz, e o juiz te entregue ao oficial, e te encerrem na prisão.","Em verdade te digo que, de maneira nenhuma, sairás dali, enquanto não pagares o último ceitil.","Ouvistes que foi dito aos antigos: Não cometerás adultério.","Eu porém vos digo que qualquer que atentar numa mulher para a cobiçar já em seu coração cometeu adultério com ela.","Portanto, se o teu olho direito te escandalizar, arranca-o e atira-o para longe de ti, pois te é melhor que se perca um dos teus membros do que todo o teu corpo seja lançado no inferno.","E, se a tua mão direita te escandalizar, corta-a e atira-a para longe de ti, porque te é melhor que um dos teus membros se perca do que todo o teu corpo seja lançado no inferno.","Também foi dito: Qualquer que deixar sua mulher, que lhe dê carta de desquite.","Eu, porém, vos digo que qualquer que repudiar sua mulher, a não ser por causa de prostituição, faz que ela cometa adultério; e qualquer que casar com a repudiada comete adultério.","Outrossim, ouvistes que foi dito aos antigos: Não perjurarás, mas cumprirás teus juramentos ao Senhor.","Eu, porém, vos digo que, de maneira nenhuma, jureis nem pelo céu, porque é o trono de Deus,","nem pela terra, porque é o escabelo de seus pés, nem por Jerusalém, porque é a cidade do grande Rei,","nem jurarás pela tua cabeça, porque não podes tornar um cabelo branco ou preto.","Seja, porém, o vosso falar: Sim, sim; não, não, porque o que passa disso é de procedência maligna.","Ouvistes que foi dito: Olho por olho e dente por dente.","Eu, porém, vos digo que não resistais ao mal; mas, se qualquer te bater na face direita, oferece-lhe também a outra;","e ao que quiser pleitear contigo e tirar-te a túnica, larga-lhe também a capa;","e, se qualquer te obrigar a caminhar uma milha, vai com ele duas.","Dá a quem te pedir e não te desvies daquele que quiser que lhe emprestes.","Ouvistes que foi dito: Amarás o teu próximo e aborrecerás o teu inimigo.","Eu, porém, vos digo: Amai a vossos inimigos, bendizei os que vos maldizem, fazei bem aos que vos odeiam e orai pelos que vos maltratam e vos perseguem,","para que sejais filhos do Pai que está nos céus; porque faz que o seu sol se levante sobre maus e bons e a chuva desça sobre justos e injustos.","Pois, se amardes os que vos amam, que galardão tereis? Não fazem os publicanos também o mesmo?","E, se saudardes unicamente os vossos irmãos, que fazeis de mais? Não fazem os publicanos também assim?","Sede vós, pois, perfeitos, como é perfeito o vosso Pai, que está nos céus."]]},
+  {abbrev:"jo",name:"João",chapters:[[],["E havia entre os fariseus um homem chamado Nicodemos, príncipe dos judeus.","Este foi ter de noite com Jesus e disse-lhe: Rabi, bem sabemos que és mestre vindo de Deus, porque ninguém pode fazer estes sinais que tu fazes, se Deus não for com ele.","Jesus respondeu e disse-lhe: Na verdade, na verdade te digo que aquele que não nascer de novo não pode ver o Reino de Deus.","Disse-lhe Nicodemos: Como pode um homem nascer, sendo velho? Porventura, pode tornar a entrar no ventre de sua mãe e nascer?","Jesus respondeu: Na verdade, na verdade te digo que aquele que não nascer da água e do Espírito não pode entrar no Reino de Deus.","O que é nascido da carne é carne, e o que é nascido do Espírito é espírito.","Não te maravilhes de te ter dito: Necessário vos é nascer de novo.","O vento assopra onde quer, e ouves a sua voz, mas não sabes donde vem, nem para onde vai; assim é todo aquele que é nascido do Espírito.","Nicodemos respondeu e disse-lhe: Como pode ser isso?","Jesus respondeu e disse-lhe: Tu és mestre de Israel e não sabes isso?","Na verdade, na verdade te digo que nós dizemos o que sabemos e testificamos o que vimos, e não aceitais o nosso testemunho.","Se vos falei de coisas terrestres e não crestes, como crereis, se vos falar das celestiais?","Ora, ninguém subiu ao céu, senão o que desceu do céu, o Filho do Homem, que está no céu.","E, como Moisés levantou a serpente no deserto, assim importa que o Filho do Homem seja levantado,","para que todo aquele que nele crê não pereça, mas tenha a vida eterna.","Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.","Porque Deus enviou o seu Filho ao mundo não para que condenasse o mundo, mas para que o mundo fosse salvo por ele.","Quem crê nele não é condenado; mas quem não crê já está condenado, porquanto não crê no nome do unigênito Filho de Deus.","E a condenação é esta: Que a luz veio ao mundo, e os homens amaram mais as trevas do que a luz, porque as suas obras eram más.","Porque todo aquele que faz o mal aborrece a luz e não vem para a luz para que as suas obras não sejam reprovadas.","Mas quem pratica a verdade vem para a luz, a fim de que as suas obras sejam manifestas, porque são feitas em Deus.","Depois disso, foi Jesus com os seus discípulos para a terra da Judeia; e estava ali com eles e batizava.","Ora, João batizava também em Enom, junto a Salim, porque havia ali muitas águas; e vinham ali e eram batizados.","Porque ainda João não tinha sido lançado na prisão.","Houve, então, uma questão entre os discípulos de João e os judeus, acerca da purificação.","E foram ter com João e disseram-lhe: Rabi, aquele que estava contigo além do Jordão, do qual tu deste testemunho, ei-lo batizando, e todos vão ter com ele.","João respondeu e disse: O homem não pode receber coisa alguma, se lhe não for dada do céu.","Vós mesmos me sois testemunhas de que disse: Eu não sou o Cristo, mas sou enviado adiante dele.","Aquele que tem a esposa é o esposo; mas o amigo do esposo, que lhe assiste e o ouve, alegra-se muito com a voz do esposo. Assim, pois, já essa minha alegria está cumprida.","É necessário que ele cresça e que eu diminua.","Aquele que vem de cima é sobre todos, aquele que vem da terra é da terra e fala da terra. Aquele que vem do céu é sobre todos.","E aquilo que ele viu e ouviu, isso testifica; e ninguém aceita o seu testemunho.","Aquele que aceitou o seu testemunho, esse confirmou que Deus é verdadeiro.","Porque aquele que Deus enviou fala as palavras de Deus, pois não lhe dá Deus o Espírito por medida.","O Pai ama o Filho e todas as coisas entregou nas suas mãos.","Aquele que crê no Filho tem a vida eterna, mas aquele que não crê no Filho não verá a vida, mas a ira de Deus sobre ele permanece."]]}
+];
+
+let biblia = [];
+let bibliaCompleta = false;
+let livroAtual = 'jo';
+let capituloAtual = 3;
+let versiculoDestaque = 16;
+let versoSelecionado = null;
+let favoritos = JSON.parse(localStorage.getItem('biblia_favoritos')||'[]');
+
+const $ = s => document.querySelector(s);
+const statusEl = $('#status');
+const versiculosEl = $('#versiculos');
+const tituloLivroEl = $('#tituloLivro');
+const toolbar = $('#toolbar');
+
+function atualizarStatus(txt, erro=false){
+  statusEl.textContent = txt;
+  statusEl.className = 'text-[11px] leading-4 truncate ' + (erro ? 'text-amber-400' : 'text-zinc-400');
+}
+
+function toast(msg){
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 px-4 h-10 grid place-items-center rounded-full bg-zinc-900 border border-white/10 text-sm shadow-xl z-[100] animate-[fade_2s_ease]';
+  t.style.animation = 'fade 2.2s forwards';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2100);
+}
+
+function mostrarCapitulo(abbrev, cap, destaque=null){
+  const livro = biblia.find(l=>l.abbrev===abbrev);
+  if(!livro){ if(!bibliaCompleta){toast('Baixando Bíblia completa...'); baixarCompleta();} return; }
+  livroAtual = abbrev; capituloAtual = cap; versiculoDestaque = destaque;
+  const caps = livro.chapters[cap-1] || [];
+  tituloLivroEl.textContent = `${livro.name} ${cap}`;
+  versiculosEl.innerHTML = '';
+  
+  if(caps.length===0){
+    versiculosEl.innerHTML = `<div class="text-center py-16 text-zinc-500"><p>Capítulo ainda não disponível offline.</p><button onclick="baixarCompleta()" class="mt-3 px-4 h-9 rounded-lg bg-violet-600 text-sm">Baixar Bíblia completa</button></div>`;
+    return;
+  }
+  
+  caps.forEach((txt,i)=>{
+    const n = i+1;
+    const div = document.createElement('div');
+    div.className = 'verso group flex gap-3 py-2.5 px-3 -mx-3 rounded-2xl hover:bg-white/[0.03] active:bg-white/[0.05] cursor-pointer transition';
+    div.dataset.vers = n;
+    const isFav = favoritos.some(f=>f.id===`${abbrev}-${cap}-${n}`);
+    div.innerHTML = `<span class="w-7 text-right shrink-0 mt-0.5 text-[13px] font-medium text-zinc-600 group-[.ativo]:text-[#7c3aed]">${n}</span><p class="flex-1 text-[17px] leading-[28px] text-zinc-200">${txt}${isFav?'<span class="ml-2 text-amber-400">•</span>':''}</p>`;
+    if(destaque && n===destaque) div.classList.add('ativo','bg-violet-950/20','ring-1','ring-violet-900/50');
+    versiculosEl.appendChild(div);
+  });
+  if(destaque) setTimeout(()=>document.querySelector(`[data-vers="${destaque}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  else window.scrollTo({top:0,behavior:'instant'});
+  esconderToolbar();
+}
+
+function esconderToolbar(){ toolbar.classList.add('hidden'); versoSelecionado=null; document.querySelectorAll('.verso.ativo').forEach(v=>v.classList.remove('ativo','bg-violet-950/20','ring-1','ring-violet-900/50')); }
+
+versiculosEl.addEventListener('click', e=>{
+  const v = e.target.closest('.verso');
+  if(!v) return;
+  document.querySelectorAll('.verso.ativo').forEach(el=>el.classList.remove('ativo','bg-violet-950/20','ring-1','ring-violet-900/50'));
+  v.classList.add('ativo','bg-violet-950/20','ring-1','ring-violet-900/50');
+  const vers = +v.dataset.vers;
+  const livro = biblia.find(l=>l.abbrev===livroAtual);
+  versoSelecionado = {abbrev:livroAtual, livro:livro.name, cap:capituloAtual, vers, texto:livro.chapters[capituloAtual-1][vers-1]};
+  toolbar.classList.remove('hidden');
+});
+
+toolbar.addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn || !versoSelecionado) return;
+  const act = btn.dataset.act;
+  const {livro,cap,vers,texto,abbrev} = versoSelecionado;
+  const ref = `${livro} ${cap}:${vers}`;
+  if(act==='fav'){
+    const id=`${abbrev}-${cap}-${vers}`;
+    const idx=favoritos.findIndex(f=>f.id===id);
+    if(idx>=0){favoritos.splice(idx,1);toast('Removido dos favoritos')}
+    else{favoritos.push({id,abbrev,livro,cap,vers,texto});toast('Salvo nos favoritos')}
+    localStorage.setItem('biblia_favoritos',JSON.stringify(favoritos));
+    mostrarCapitulo(abbrev,cap,vers);
+  }
+  if(act==='copy'){
+    navigator.clipboard.writeText(`"${texto}" (${ref})`).then(()=>toast('Copiado!'));
+  }
+  if(act==='share'){
+    const txt = `"${texto}"\n${ref} - Bíblia ARC`;
+    if(navigator.share){ navigator.share({title:ref,text:txt}).catch(()=>{}); }
+    else { navigator.clipboard.writeText(txt).then(()=>toast('Copiado para compartilhar')); }
+  }
+  if(act==='img'){ gerarImagem(ref,texto); }
+});
+
+function gerarImagem(ref,texto){
+  const c = document.createElement('canvas'); c.width=1080; c.height=1080;
+  const ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,1080,1080); g.addColorStop(0,'#050507'); g.addColorStop(1,'#2e1065');
+  ctx.fillStyle=g; ctx.fillRect(0,0,1080,1080);
+  ctx.fillStyle='rgba(124,58,237,0.15)'; ctx.beginPath(); ctx.arc(540,540,500,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.font='700 56px system-ui';
+  const maxW=860; const lines=[]; let line=''; texto.split(' ').forEach(w=>{const t=line+w+' '; if(ctx.measureText(t).width>maxW){lines.push(line); line=w+' ';}else line=t;}); lines.push(line);
+  let y=540 - (lines.length-1)*40; lines.forEach(l=>{ctx.fillText(l.trim(),540,y); y+=80;});
+  ctx.font='500 32px system-ui'; ctx.fillStyle='rgba(255,255,255,.8)'; ctx.fillText(ref+' - ARC',540,880);
+  ctx.font='400 24px system-ui'; ctx.fillStyle='rgba(255,255,255,.5)'; ctx.fillText('Bíblia ContonCreat',540,940);
+  const url=c.toDataURL('image/jpeg',0.92);
+  const a=document.createElement('a'); a.href=url; a.download=ref.replace(/[:\s]/g,'-')+'.jpg'; a.click();
+  toast('Imagem gerada');
+}
+
+$('#prevCap').onclick = ()=>{
+  if(capituloAtual>1) mostrarCapitulo(livroAtual,capituloAtual-1);
+  else { const i=biblia.findIndex(l=>l.abbrev===livroAtual); if(i>0){ const p=biblia[i-1]; mostrarCapitulo(p.abbrev,p.chapters.length); } }
+};
+$('#nextCap').onclick = ()=>{
+  const livro=biblia.find(l=>l.abbrev===livroAtual);
+  if(capituloAtual<livro.chapters.length) mostrarCapitulo(livroAtual,capituloAtual+1);
+  else { const i=biblia.findIndex(l=>l.abbrev===livroAtual); if(i<biblia.length-1){ mostrarCapitulo(biblia[i+1].abbrev,1); } }
+};
+
+function abrirModal(id,show){ $('#modal'+id).classList.toggle('hidden',!show); }
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>abrirModal(b.dataset.close.charAt(0).toUpperCase()+b.dataset.close.slice(1),false));
+
+$('#btnBusca').onclick=()=>{ abrirModal('Busca',true); setTimeout(()=>$('#inputBusca').focus(),100); };
+$('#btnFav').onclick=()=>{ renderFav(); abrirModal('Fav',true); };
+$('#btnApoie').onclick=()=>abrirModal('Apoie',true);
+$('#copiarPix').onclick=()=>{ navigator.clipboard.writeText('gstudio900@gmail.com').then(()=>toast('Pix copiado!')); };
+
+$('#seletorLivro').onclick=()=>{ renderLivros(); abrirModal('Livros',true); };
+
+function renderLivros(){
+  const grid=$('#gridLivros'); grid.innerHTML='';
+  biblia.forEach(l=>{
+    const b=document.createElement('button');
+    b.className='p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-left transition active:scale-[.98]';
+    b.innerHTML=`<div class="text-[13px] font-medium">${l.name}</div><div class="text-[11px] text-zinc-500 mt-0.5">${l.chapters.length} cap.</div>`;
+    b.onclick=()=>abrirCapitulos(l);
+    grid.appendChild(b);
+  });
+  $('#gridCapitulos').classList.add('hidden'); grid.classList.remove('hidden');
+}
+function abrirCapitulos(livro){
+  $('#gridLivros').classList.add('hidden');
+  const box=$('#gridCapitulos'); box.classList.remove('hidden');
+  $('#tituloCapitulos').textContent=livro.name;
+  const caps=$('#caps'); caps.innerHTML='';
+  livro.chapters.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='aspect-square grid place-items-center rounded-xl bg-white/[0.03] hover:bg-violet-600/20 hover:text-violet-200 border border-white/5 text-sm transition';
+    b.textContent=i+1; b.onclick=()=>{ mostrarCapitulo(livro.abbrev,i+1); abrirModal('Livros',false); };
+    caps.appendChild(b);
+  });
+}
+$('#voltarLivros').onclick=renderLivros;
+
+let buscaTimeout;
+$('#inputBusca').oninput = e=>{
+  clearTimeout(buscaTimeout);
+  const q=e.target.value.trim().toLowerCase();
+  const out=$('#resultadosBusca');
+  if(q.length<2){ out.innerHTML='<p class="text-center text-zinc-500 text-sm py-10">Digite pelo menos 2 letras</p>'; return; }
+  buscaTimeout=setTimeout(()=>{
+    const res=[]; biblia.forEach(l=>l.chapters.forEach((cap,ci)=>cap.forEach((v,vi)=>{ if(v.toLowerCase().includes(q)){ res.push({l:l.name,a:l.abbrev,c:ci+1,v:vi+1,t:v}); } })));
+    if(res.length===0){ out.innerHTML='<p class="text-center text-zinc-500 py-10">Nenhum resultado</p>'; return; }
+    out.innerHTML = res.slice(0,100).map(r=>`
+      <button class="w-full text-left p-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition" data-go="${r.a}-${r.c}-${r.v}">
+        <div class="text-[12px] text-violet-400 font-medium">${r.l} ${r.c}:${r.v}</div>
+        <div class="text-[14px] text-zinc-300 mt-1 line-clamp-2">${r.t.replace(new RegExp(q,'gi'),m=>`<mark class="bg-violet-500/30 text-violet-200 px-0.5 rounded">${m}</mark>`)}</div>
+      </button>`).join('') + (res.length>100?`<p class="text-center text-xs text-zinc-600 mt-3">+${res.length-100} resultados</p>`:'');
+    out.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ const [a,c,v]=b.dataset.go.split('-'); mostrarCapitulo(a,+c,+v); abrirModal('Busca',false); });
+  },250);
+};
+
+function renderFav(){
+  const lista=$('#listaFav');
+  if(favoritos.length===0){ lista.innerHTML=`<div class="text-center py-12 text-zinc-500"><p>Nenhum favorito ainda</p><p class="text-xs mt-1">Toque em um versículo e clique em Salvar</p></div>`; return; }
+  lista.innerHTML = favoritos.slice().reverse().map(f=>`
+    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+      <div class="flex items-start justify-between gap-3">
+        <button class="text-left flex-1" data-open="${f.abbrev}-${f.cap}-${f.vers}">
+          <div class="text-[12px] text-violet-400 font-medium mb-1">${f.livro} ${f.cap}:${f.vers}</div>
+          <div class="text-[15px] leading-[24px] text-zinc-200">"${f.texto}"</div>
+        </button>
+        <button class="size-8 grid place-items-center rounded-lg hover:bg-white/5 text-zinc-500 hover:text-red-400" data-del="${f.id}">✕</button>
+      </div>
+    </div>`).join('');
+  lista.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{ const [a,c,v]=b.dataset.open.split('-'); mostrarCapitulo(a,+c,+v); abrirModal('Fav',false); });
+  lista.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ favoritos=favoritos.filter(f=>f.id!==b.dataset.del); localStorage.setItem('biblia_favoritos',JSON.stringify(favoritos)); renderFav(); toast('Removido'); });
+}
+
+async function baixarCompleta(){
+  if(bibliaCompleta) return;
+  atualizarStatus('Baixando Bíblia completa (4MB)...');
+  try{
+    const res = await fetch('https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/arc.json',{cache:'no-store'});
+    if(!res.ok) throw new Error('net');
+    const data = await res.json();
+    biblia = data;
+    bibliaCompleta = true;
+    localStorage.setItem('biblia_arc_completa', JSON.stringify(data));
+    atualizarStatus('Pronto offline ✓');
+    renderLivros();
+    mostrarCapitulo(livroAtual,capituloAtual,versiculoDestaque);
+    toast('Bíblia completa baixada');
+  }catch(e){
+    atualizarStatus('Sem internet - modo limitado. Toque para tentar',true);
+    console.error(e);
+  }
+}
+
+$('#statusBtn').onclick=()=>{ if(!bibliaCompleta) baixarCompleta(); };
+
+async function iniciar(){
+  try{
+    const salvo = localStorage.getItem('biblia_arc_completa');
+    if(salvo){
+      biblia = JSON.parse(salvo);
+      bibliaCompleta = true;
+      atualizarStatus('Pronto offline ✓');
+    }else{
+      biblia = BIBLIA_MINIMA;
+      bibliaCompleta = false;
+      atualizarStatus('Baixando Bíblia completa (4MB)...');
+    }
+    mostrarCapitulo('jo',3,16);
+    renderLivros();
+    if(!bibliaCompleta) setTimeout(baixarCompleta,800);
+  }catch(e){
+    biblia = BIBLIA_MINIMA;
+    atualizarStatus('Erro ao carregar',true);
+    mostrarCapitulo('jo',3,16);
+  }
+}
+
+document.addEventListener('click',e=>{ if(!e.target.closest('#toolbar') && !e.target.closest('.verso')) esconderToolbar(); });
+
+window.addEventListener('DOMContentLoaded', iniciar);
+</script>
+</body>
+</html>
