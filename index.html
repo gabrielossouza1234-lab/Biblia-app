@@ -193,637 +193,638 @@
 })();</script>
 <script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0a0015">
-<title>Bíblia ContonCreat v5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Bíblia ContonCreat</title>
+
+<!-- Playables SDK -->
+<script>
+  window.PlayablesSDK = window.PlayablesSDK || { 
+    init: function(){ console.log('Playables SDK Ready'); }, 
+    onReady: function(cb){ cb && cb(); } 
+  };
+  window.PlayablesSDK.init();
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;1,300&display=swap" rel="stylesheet">
+
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent }
-:root {
-  --bg:#0a0015; --bg2:#1e0533; --surface:rgba(255,255,255,0.06);
-  --text:#ffffff; --muted:#a78bfa; --highlight:#facc15;
-  --font-size:18px; --radius:14px;
-}
-html, body { height:100%; overflow-x:hidden }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-  color: var(--text); line-height:1.6; -webkit-font-smoothing:antialiased;
-}
-button { font-family:inherit }
-
-/* Loading */
-#loading {
-  position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; background:#050008; transition:opacity .5s;
-}
-.logo-load {
-  font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-bottom:2rem;
-  background:linear-gradient(90deg,#a78bfa,#ec4899,#8b5cf6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:pulse 2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
-.progress-wrap { width:82%; max-width:340px }
-.progress-bar { width:100%; height:8px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; padding:2px }
-.progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#7c3aed,#ec4899); border-radius:99px; transition:width .3s; box-shadow:0 0 20px rgba(236,72,153,.5) }
-#loading-text { margin-top:1rem; color:var(--muted); font-size:.9rem; text-align:center }
-.fonts-load { display:flex; gap:.5rem; margin-top:1.5rem; font-size:.75rem; color:#64748b }
-.font-dot { width:8px; height:8px; border-radius:50%; background:#334155 }
-.font-dot.active { background:#a78bfa; box-shadow:0 0 8px #a78bfa }
-
-/* App */
-#app { min-height:100vh; display:flex; flex-direction:column }
-header {
-  position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:.6rem;
-  padding:.7rem .9rem; background:rgba(10,0,21,.85); backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(167,139,250,.15);
-}
-.icon-btn {
-  width:40px; height:40px; display:grid; place-items:center; flex-shrink:0;
-  background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:12px;
-  color:var(--text); cursor:pointer; transition:.2s;
-}
-.icon-btn:active { transform:scale(.93); background:rgba(255,255,255,.12) }
-.icon-btn svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
-#headerTitle { flex:1; font-size:1.05rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-.header-actions { display:flex; gap:.5rem }
-
-/* Sidebar */
-#overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(2px); z-index:39; opacity:0; pointer-events:none; transition:.3s }
-#overlay.show { opacity:1; pointer-events:all }
-#sidebar {
-  position:fixed; top:0; left:0; bottom:0; width:300px; max-width:86vw; z-index:40;
-  background:linear-gradient(180deg,#14031f 0%, #07000d 100%); border-right:1px solid rgba(167,139,250,.2);
-  transform:translateX(-100%); transition:transform .35s cubic-bezier(.2,.8,.2,1);
-  display:flex; flex-direction:column;
-}
-#sidebar.open { transform:translateX(0) }
-.sidebar-top { padding:1rem; border-bottom:1px solid rgba(255,255,255,.08) }
-#searchInput {
-  width:100%; padding:.75rem .9rem; background:rgba(0,0,0,.4); border:1px solid rgba(167,139,250,.25);
-  border-radius:12px; color:var(--text); font-size:.95rem; outline:none;
-}
-#searchInput:focus { border-color:#8b5cf6; box-shadow:0 0 0 3px rgba(139,92,246,.2) }
-.books { flex:1; overflow-y:auto; padding:.6rem; scrollbar-width:thin }
-.book-btn {
-  width:100%; display:flex; align-items:center; justify-content:space-between;
-  padding:.7rem .85rem; margin-bottom:.25rem; background:transparent; border:none;
-  color:#d1c5f5; border-radius:10px; cursor:pointer; text-align:left; font-size:.95rem;
-  transition:.2s;
-}
-.book-btn:hover { background:rgba(255,255,255,.05); color:#fff }
-.book-btn.active { background:linear-gradient(90deg,#7c3aed,#a21caf); color:#fff; font-weight:600; box-shadow:0 4px 14px rgba(124,58,237,.3) }
-.book-chapters { font-size:.75rem; opacity:.6 }
-.sidebar-foot { padding:.8rem; border-top:1px solid rgba(255,255,255,.08) }
-.fav-btn { width:100%; padding:.7rem; background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:12px; color:var(--text); cursor:pointer; font-size:.9rem }
-
-/* Main */
-main { flex:1; width:100%; max-width:820px; margin:0 auto; padding:1rem .9rem 140px }
-.chapter-head { margin:1.5rem 0 1rem; text-align:center }
-.chapter-head h2 { font-size:1.6rem; font-weight:800; letter-spacing:-.5px; background:linear-gradient(90deg,#fff,#c4b5fd); -webkit-background-clip:text; color:transparent }
-.verses { display:flex; flex-direction:column; gap:.15rem }
-.verse {
-  display:flex; gap:.75rem; align-items:flex-start; padding:.65rem .7rem .65rem .9rem;
-  border-radius:12px; position:relative; transition:.2s; border-left:3px solid transparent;
-}
-.verse:active { background:rgba(255,255,255,.03) }
-.verse.highlighted {
-  background:color-mix(in srgb, var(--highlight) 16%, transparent);
-  border-left-color:var(--highlight);
-}
-.verse-num {
-  font-size:.78rem; font-weight:700; color:var(--muted); min-width:1.7rem; padding-top:.25rem;
-  user-select:none; font-variant-numeric:tabular-nums; cursor:pointer;
-}
-.verse.favorited .verse-num { color:#facc15; text-shadow:0 0 10px rgba(250,204,21,.5) }
-.verse.favorited .verse-num::after { content:"★"; margin-left:3px; font-size:.7rem }
-.verse-text { flex:1; font-size:var(--font-size); line-height:1.75; color:var(--text); word-wrap:break-word }
-.verse-actions {
-  display:flex; gap:4px; margin-left:.3rem; opacity:.55; transition:.2s; flex-shrink:0; padding-top:.1rem;
-}
-.verse:hover .verse-actions, .verse:focus-within .verse-actions { opacity:1 }
-.v-btn {
-  width:30px; height:30px; display:grid; place-items:center; background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08); border-radius:8px; color:#c4b5fd; cursor:pointer; transition:.2s;
-}
-.v-btn:hover { background:rgba(255,255,255,.12); color:#fff; transform:translateY(-1px) }
-.v-btn:active { transform:scale(.92) }
-.v-btn svg { width:15px; height:15px }
-
-/* Footer nav */
-.chap-nav {
-  position:fixed; bottom:78px; left:50%; transform:translateX(-50%); z-index:20;
-  display:flex; align-items:center; gap:.5rem; padding:.45rem; background:rgba(15,0,30,.9);
-  backdrop-filter:blur(16px); border:1px solid rgba(167,139,250,.25); border-radius:99px; box-shadow:0 10px 30px rgba(0,0,0,.5);
-}
-.chap-nav button {
-  padding:.55rem 1rem; border:none; background:var(--surface); color:var(--text); border-radius:99px;
-  font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s;
-}
-.chap-nav button:active { transform:scale(.95) }
-.chap-nav button:disabled { opacity:.4 }
-#chapterSelect {
-  background:rgba(0,0,0,.5); color:#fff; border:1px solid rgba(255,255,255,.15); border-radius:99px;
-  padding:.5rem .8rem; font-size:.9rem; font-weight:600; min-width:70px; text-align:center;
-}
-
-/* Pix */
-#pixBtn {
-  position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:25;
-  padding:.7rem 1.3rem; background:linear-gradient(90deg,#7c3aed,#ec4899); color:#fff; border:none;
-  border-radius:99px; font-weight:700; font-size:.88rem; cursor:pointer; white-space:nowrap;
-  box-shadow:0 8px 24px rgba(124,58,237,.4), inset 0 1px 0 rgba(255,255,255,.2); transition:.2s;
-}
-#pixBtn:active { transform:translateX(-50%) scale(.96) }
-
-/* Settings Panel */
-.panel { position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:1rem; background:rgba(0,0,0,.75); backdrop-filter:blur(10px); opacity:0; pointer-events:none; transition:.3s }
-.panel.show { opacity:1; pointer-events:all }
-.panel-content {
-  width:100%; max-width:440px; max-height:88vh; overflow:auto; background:linear-gradient(180deg,#1a0730,#080010);
-  border:1px solid rgba(167,139,250,.3); border-radius:24px; padding:1.5rem; box-shadow:0 20px 60px rgba(0,0,0,.7);
-  transform:translateY(20px); transition:.3s;
-}
-.panel.show .panel-content { transform:translateY(0) }
-.panel h2 { font-size:1.3rem; margin-bottom:1.2rem; font-weight:800 }
-.setting-group { margin-bottom:1.4rem }
-.setting-group > label { display:block; font-size:.9rem; color:#c4b5fd; margin-bottom:.6rem; font-weight:600 }
-.range-wrap { display:flex; align-items:center; gap:1rem }
-input[type=range] { flex:1; height:6px; -webkit-appearance:none; appearance:none; background:rgba(255,255,255,.1); border-radius:99px; outline:none }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid #8b5cf6; box-shadow:0 2px 6px rgba(0,0,0,.4); cursor:pointer }
-#fontSizeVal { min-width:48px; text-align:right; font-variant-numeric:tabular-nums; color:#fff; font-weight:700 }
-.options { display:flex; flex-wrap:wrap; gap:.5rem }
-.opt-btn {
-  padding:.6rem .95rem; background:rgba(255,255,255,.06); border:1.5px solid rgba(255,255,255,.1);
-  border-radius:12px; color:#e9e5ff; font-size:.88rem; font-weight:600; cursor:pointer; transition:.2s;
-}
-.opt-btn.active { background:rgba(139,92,246,.25); border-color:#8b5cf6; color:#fff; box-shadow:0 0 0 3px rgba(139,92,246,.2) }
-.opt-btn.color-dot { width:42px; height:42px; padding:0; border-radius:50%; border-width:3px }
-.opt-btn.color-dot.active { transform:scale(1.1) }
-
-/* Toast */
-#toast {
-  position:fixed; bottom:120px; left:50%; transform:translateX(-50%) translateY(20px);
-  background:#111; color:#fff; padding:.75rem 1.2rem; border-radius:12px; font-size:.9rem; font-weight:600;
-  box-shadow:0 10px 30px rgba(0,0,0,.5); opacity:0; pointer-events:none; transition:.3s; z-index:100;
-  border:1px solid rgba(255,255,255,.1); white-space:nowrap; max-width:90vw;
-}
-#toast.show { opacity:1; transform:translateX(-50%) translateY(0) }
-
-/* Desktop */
-@media(min-width:1024px){
-  #sidebar { transform:none; width:320px }
-  #overlay { display:none }
-  header { left:320px }
-  main { margin-left:320px; max-width:900px; padding:1.5rem 2rem 150px }
-  .chap-nav { left:calc(50% + 160px) }
-  #menuBtn { display:none }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width:8px; height:8px }
-::-webkit-scrollbar-thumb { background:rgba(167,139,250,.3); border-radius:4px }
-::-webkit-scrollbar-thumb:hover { background:rgba(167,139,250,.5) }
-
-.hidden { display:none !important }
+  :root { 
+    --font-size: 17px; 
+    --text-color: #ffffff; 
+    --highlight: #facc15;
+    --bg-main: #050507;
+    --bg-card: #0f0a1a;
+  }
+  * { -webkit-tap-highlight-color: transparent; }
+  body { 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+    background: var(--bg-main);
+    overscroll-behavior: none;
+  }
+  .font-serif { font-family: 'Merriweather', serif; }
+  .verse-text { font-size: var(--font-size); color: var(--text-color); line-height: 1.8; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .tab-active { color: #a855f7 !important; }
+  .tab-active svg { stroke: #a855f7; }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 </style>
 </head>
-<body>
+<body class="bg-[#050507] text-white select-none">
 
-<div id="loading">
-  <div class="logo-load">Bíblia ContonCreat</div>
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<!-- LOADING -->
+<div id="loading" class="fixed inset-0 z-[100] bg-[#050507] flex flex-col items-center justify-center">
+  <div class="w-20 h-20 mb-6 relative">
+    <div class="absolute inset-0 rounded-full border-4 border-purple-900/30"></div>
+    <div class="absolute inset-0 rounded-full border-4 border-t-purple-500 animate-spin"></div>
+    <div class="absolute inset-3 flex items-center justify-center text-2xl">📖</div>
   </div>
-  <p id="loading-text">Iniciando...</p>
-  <div class="fonts-load">
-    <span><span class="font-dot" id="dot1"></span> NVI</span>
-    <span><span class="font-dot" id="dot2"></span> ARA</span>
-    <span><span class="font-dot" id="dot3"></span> ACF</span>
+  <h1 class="text-2xl font-bold tracking-wide">BÍBLIA</h1>
+  <p class="text-purple-300/70 text-sm mb-6">ContonCreat</p>
+  <div class="w-64 h-1.5 bg-white/10 rounded-full overflow-hidden">
+    <div id="loadingBar" class="h-full w-0 bg-gradient-to-r from-purple-600 to-violet-400 transition-all duration-300"></div>
   </div>
+  <p id="loadingText" class="text-xs text-white/50 mt-3">Preparando...</p>
 </div>
 
-<div id="app" hidden>
-  <header>
-    <button class="icon-btn" id="menuBtn" aria-label="Menu">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-    <h1 id="headerTitle">Gênesis 1</h1>
-    <div class="header-actions">
-      <button class="icon-btn" id="shareChapterBtn" title="Compartilhar capítulo">
-        <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+<!-- APP -->
+<div id="app" class="hidden min-h-screen flex flex-col">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-[#050507]/90 backdrop-blur-xl border-b border-purple-900/30">
+    <div class="flex items-center h-[56px] px-3 gap-2">
+      <button id="backBtn" class="hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/10 active:scale-95">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <button class="icon-btn" id="settingsBtn" title="Configurações">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 0 0 0 4.6 9a1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <div class="flex-1 min-w-0">
+        <h1 id="headerTitle" class="text-[17px] font-semibold truncate">Ler a Bíblia</h1>
+        <p id="headerSub" class="text-[11px] text-purple-300/70 -mt-1 truncate">Almeida Revista e Corrigida</p>
+      </div>
+      <button id="searchBtn" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/10">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       </button>
     </div>
   </header>
 
-  <div id="overlay"></div>
-  <aside id="sidebar">
-    <div class="sidebar-top">
-      <input id="searchInput" type="search" placeholder="Buscar livro ou referência (ex: Jo 3:16)">
-    </div>
-    <div class="books" id="booksList"></div>
-    <div class="sidebar-foot">
-      <button class="fav-btn" id="showFavs">⭐ Favoritos (<span id="favCount">0</span>)</button>
-    </div>
-  </aside>
-
-  <main>
-    <div class="chapter-head"><h2 id="chapterTitle">Gênesis 1</h2></div>
-    <div class="verses" id="verses"></div>
-  </main>
-
-  <div class="chap-nav">
-    <button id="prevChap">‹ Anterior</button>
-    <select id="chapterSelect" aria-label="Capítulo"></select>
-    <button id="nextChap">Próximo ›</button>
-  </div>
-
-  <button id="pixBtn">💜 Apoie via Pix</button>
-</div>
-
-<!-- Settings -->
-<div id="settingsPanel" class="panel">
-  <div class="panel-content">
-    <h2>Configurações</h2>
-    
-    <div class="setting-group">
-      <label>Tamanho da fonte</label>
-      <div class="range-wrap">
-        <input type="range" id="fontSize" min="14" max="28" value="18">
-        <span id="fontSizeVal">18px</span>
+  <!-- MAIN -->
+  <main class="flex-1 relative">
+    <!-- TAB LER -->
+    <section id="tab-ler" class="tab-content absolute inset-0 overflow-hidden">
+      <!-- Livros -->
+      <div id="booksView" class="h-full overflow-y-auto no-scrollbar px-4 py-4 pb-28">
+        <div class="grid grid-cols-1 gap-6" id="booksContainer"></div>
       </div>
-    </div>
-
-    <div class="setting-group">
-      <label>Cor do texto</label>
-      <div class="options">
-        <button class="opt-btn" data-text="branco">Branco</button>
-        <button class="opt-btn" data-text="creme">Creme</button>
-        <button class="opt-btn" data-text="amarelo">Amarelo claro</button>
+      <!-- Capítulos -->
+      <div id="chaptersView" class="hidden h-full overflow-y-auto no-scrollbar px-4 py-4 pb-28">
+        <div id="chaptersGrid" class="grid grid-cols-5 sm:grid-cols-8 gap-2.5"></div>
       </div>
-    </div>
-
-    <div class="setting-group">
-      <label>Cor do destaque</label>
-      <div class="options">
-        <button class="opt-btn color-dot" data-hl="amarelo" style="background:#facc15" title="Amarelo"></button>
-        <button class="opt-btn color-dot" data-hl="verde" style="background:#22c55e" title="Verde"></button>
-        <button class="opt-btn color-dot" data-hl="azul" style="background:#3b82f6" title="Azul"></button>
-        <button class="opt-btn color-dot" data-hl="rosa" style="background:#ec4899" title="Rosa"></button>
+      <!-- Versículos -->
+      <div id="versesView" class="hidden h-full overflow-y-auto no-scrollbar">
+        <div id="versesList" class="px-4 py-2 pb-28"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="setting-group">
-      <label>Tema</label>
-      <div class="options">
-        <button class="opt-btn" data-theme="roxo">Roxo</button>
-        <button class="opt-btn" data-theme="escuro">Escuro</button>
-        <button class="opt-btn" data-theme="preto">Preto total</button>
+    <!-- TAB BUSCAR -->
+    <section id="tab-buscar" class="tab-content hidden absolute inset-0 overflow-hidden">
+      <div class="h-full flex flex-col">
+        <div class="p-4 sticky top-0 bg-[#050507] z-10">
+          <div class="relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="searchInput" type="text" placeholder="Buscar palavra, versículo..." class="w-full h-12 pl-10 pr-4 bg-[#120c1f] border border-purple-900/40 rounded-2xl outline-none focus:border-purple-500 text-[15px]" autocomplete="off">
+          </div>
+          <div class="flex gap-2 mt-3 overflow-x-auto no-scrollbar">
+            <button class="search-tag px-3 py-1.5 rounded-full bg-white/10 text-xs whitespace-nowrap" data-term="amor">amor</button>
+            <button class="search-tag px-3 py-1.5 rounded-full bg-white/10 text-xs whitespace-nowrap" data-term="fé">fé</button>
+            <button class="search-tag px-3 py-1.5 rounded-full bg-white/10 text-xs whitespace-nowrap" data-term="Jesus">Jesus</button>
+            <button class="search-tag px-3 py-1.5 rounded-full bg-white/10 text-xs whitespace-nowrap" data-term="perdão">perdão</button>
+          </div>
+        </div>
+        <div id="searchResults" class="flex-1 overflow-y-auto px-4 pb-28"></div>
       </div>
-    </div>
+    </section>
 
-    <button id="closeSettings" class="opt-btn" style="width:100%; margin-top:.5rem; background:linear-gradient(90deg,#7c3aed,#ec4899); border:none; color:#fff; padding:.85rem">Fechar</button>
-  </div>
-</div>
+    <!-- TAB GRIFOS -->
+    <section id="tab-grifos" class="tab-content hidden absolute inset-0 overflow-y-auto no-scrollbar px-4 py-4 pb-28">
+      <div class="flex gap-2 mb-4 p-1 bg-black/50 rounded-2xl border border-purple-900/30 w-fit">
+        <button id="grifosTabFav" class="px-4 py-2 rounded-xl text-sm font-medium bg-purple-600">Favoritos</button>
+        <button id="grifosTabHigh" class="px-4 py-2 rounded-xl text-sm font-medium text-white/60">Grifados</button>
+      </div>
+      <div id="grifosFav" class="space-y-2"></div>
+      <div id="grifosHigh" class="space-y-2 hidden"></div>
+      <div id="grifosEmpty" class="hidden text-center py-20">
+        <div class="text-5xl mb-3 opacity-30">🖍️</div>
+        <p class="text-white/50 text-sm">Nenhum grifo ainda</p>
+      </div>
+    </section>
 
-<div id="toast"></div>
+    <!-- TAB MAIS -->
+    <section id="tab-mais" class="tab-content hidden absolute inset-0 overflow-y-auto no-scrollbar px-4 py-5 pb-28">
+      <div class="max-w-md mx-auto space-y-5">
+        <!-- Perfil -->
+        <div class="bg-gradient-to-br from-[#1a1030] to-[#0f0a1a] rounded-[28px] p-5 border border-purple-900/30">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-600/20 flex items-center justify-center text-xl">📖</div>
+            <div>
+              <h3 class="font-semibold">Bíblia ContonCreat</h3>
+              <p class="text-xs text-white/50">Sua jornada espiritual</p>
+            </div>
+          </div>
+        </div>
 
-<script>
-(() => {
-  // ===== DADOS BÍBLIA =====
-  const books = [
-    {name:"Gênesis",ch:50},{name:"Êxodo",ch:40},{name:"Levítico",ch:27},{name:"Números",ch:36},{name:"Deuteronômio",ch:34},
-    {name:"Josué",ch:24},{name:"Juízes",ch:21},{name:"Rute",ch:4},{name:"1 Samuel",ch:31},{name:"2 Samuel",ch:24},
-    {name:"1 Reis",ch:22},{name:"2 Reis",ch:25},{name:"1 Crônicas",ch:29},{name:"2 Crônicas",ch:36},{name:"Esdras",ch:10},
-    {name:"Neemias",ch:13},{name:"Ester",ch:10},{name:"Jó",ch:42},{name:"Salmos",ch:150},{name:"Provérbios",ch:31},
-    {name:"Eclesiastes",ch:12},{name:"Cânticos",ch:8},{name:"Isaías",ch:66},{name:"Jeremias",ch:52},{name:"Lamentações",ch:5},
-    {name:"Ezequiel",ch:48},{name:"Daniel",ch:12},{name:"Oseias",ch:14},{name:"Joel",ch:3},{name:"Amós",ch:9},
-    {name:"Obadias",ch:1},{name:"Jonas",ch:4},{name:"Miqueias",ch:7},{name:"Naum",ch:3},{name:"Habacuque",ch:3},
-    {name:"Sofonias",ch:3},{name:"Ageu",ch:2},{name:"Zacarias",ch:14},{name:"Malaquias",ch:4},{name:"Mateus",ch:28},
-    {name:"Marcos",ch:16},{name:"Lucas",ch:24},{name:"João",ch:21},{name:"Atos",ch:28},{name:"Romanos",ch:16},
-    {name:"1 Coríntios",ch:16},{name:"2 Coríntios",ch:13},{name:"Gálatas",ch:6},{name:"Efésios",ch:6},{name:"Filipenses",ch:4},
-    {name:"Colossenses",ch:4},{name:"1 Tessalonicenses",ch:5},{name:"2 Tessalonicenses",ch:3},{name:"1 Timóteo",ch:6},
-    {name:"2 Timóteo",ch:4},{name:"Tito",ch:3},{name:"Filemom",ch:1},{name:"Hebreus",ch:13},{name:"Tiago",ch:5},
-    {name:"1 Pedro",ch:5},{name:"2 Pedro",ch:3},{name:"1 João",ch:5},{name:"2 João",ch:1},{name:"3 João",ch:1},
-    {name:"Judas",ch:1},{name:"Apocalipse",ch:22}
-  ];
+        <!-- Fonte -->
+        <div class="bg-[#0f0a1a] rounded-[24px] p-5 border border-white/5">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-[15px] font-medium">Tamanho da Fonte</label>
+            <span id="fontValue" class="text-sm text-purple-300 font-mono">17px</span>
+          </div>
+          <input id="fontSlider" type="range" min="14" max="28" value="17" class="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-purple-500">
+          <div class="flex justify-between text-[11px] text-white/40 mt-1"><span>A</span><span>A</span></div>
+        </div>
 
-  const genesis1 = [
-    "No princípio, criou Deus os céus e a terra.",
-    "E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o Espírito de Deus se movia sobre a face das águas.",
-    "E disse Deus: Haja luz. E houve luz.",
-    "E viu Deus que era boa a luz; e fez Deus separação entre a luz e as trevas.",
-    "E Deus chamou à luz Dia; e às trevas chamou Noite. E foi a tarde e a manhã: o dia primeiro.",
-    "E disse Deus: Haja uma expansão no meio das águas, e haja separação entre águas e águas.",
-    "E fez Deus a expansão e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão. E assim foi.",
-    "E chamou Deus à expansão Céus; e foi a tarde e a manhã: o dia segundo.",
-    "E disse Deus: Ajuntem-se as águas debaixo dos céus num lugar; e apareça a porção seca. E assim foi.",
-    "E chamou Deus à porção seca Terra; e ao ajuntamento das águas chamou Mares. E viu Deus que era bom.",
-    "E disse Deus: Produza a terra erva verde, erva que dê semente, árvore frutífera que dê fruto segundo a sua espécie, cuja semente esteja nela sobre a terra. E assim foi.",
-    "E a terra produziu erva, erva dando semente conforme a sua espécie e árvore frutífera, cuja semente está nela conforme a sua espécie. E viu Deus que era bom.",
-    "E foi a tarde e a manhã: o dia terceiro.",
-    "E disse Deus: Haja luminares na expansão dos céus, para haver separação entre o dia e a noite; e sejam eles para sinais e para tempos determinados e para dias e anos.",
-    "E sejam para luminares na expansão dos céus, para alumiar a terra. E assim foi.",
-    "E fez Deus os dois grandes luminares: o luminar maior para governar o dia, e o luminar menor para governar a noite; e fez as estrelas.",
-    "E Deus os pôs na expansão dos céus para alumiar a terra,",
-    "e para governar o dia e a noite, e para fazer separação entre a luz e as trevas. E viu Deus que era bom.",
-    "E foi a tarde e a manhã: o dia quarto.",
-    "E disse Deus: Produzam as águas abundantemente répteis de alma vivente; e voem as aves sobre a face da expansão dos céus.",
-    "E Deus criou as grandes baleias, e todo réptil de alma vivente que as águas abundantemente produziram conforme as suas espécies, e toda ave de asas conforme a sua espécie. E viu Deus que era bom.",
-    "E Deus os abençoou, dizendo: Frutificai, e multiplicai-vos, e enchei as águas nos mares; e as aves se multipliquem na terra.",
-    "E foi a tarde e a manhã: o dia quinto.",
-    "E disse Deus: Produza a terra alma vivente conforme a sua espécie; gado, e répteis, e bestas-feras da terra conforme a sua espécie. E assim foi.",
-    "E fez Deus as bestas-feras da terra conforme a sua espécie, e o gado conforme a sua espécie, e todo réptil da terra conforme a sua espécie. E viu Deus que era bom.",
-    "E disse Deus: Façamos o homem à nossa imagem, conforme a nossa semelhança; e domine sobre os peixes do mar, e sobre as aves dos céus, e sobre o gado, e sobre toda a terra, e sobre todo réptil que se move sobre a terra.",
-    "E criou Deus o homem à sua imagem; à imagem de Deus o criou; macho e fêmea os criou.",
-    "E Deus os abençoou e Deus lhes disse: Frutificai, e multiplicai-vos, e enchei a terra, e sujeitai-a; e dominai sobre os peixes do mar, e sobre as aves dos céus, e sobre todo o animal que se move sobre a terra.",
-    "E disse Deus: Eis que vos tenho dado toda erva que dá semente e que está sobre a face de toda a terra e toda árvore em que há fruto de árvore que dá semente; ser-vos-ão para mantimento.",
-    "E a todo animal da terra, e a toda ave dos céus, e a todo réptil da terra, em que há alma vivente, toda a erva verde lhes será para mantimento. E assim foi.",
-    "E viu Deus tudo quanto tinha feito, e eis que era muito bom. E foi a tarde e a manhã: o dia sexto."
-  ];
+        <!-- Cor Texto -->
+        <div class="bg-[#0f0a1a] rounded-[24px] p-5 border border-white/5">
+          <p class="text-[15px] font-medium mb-3">Cor do Texto</p>
+          <div class="flex gap-3">
+            <button data-color="#ffffff" class="color-text w-10 h-10 rounded-full bg-white ring-2 ring-purple-500 ring-offset-2 ring-offset-[#0f0a1a]"></button>
+            <button data-color="#f5e9c9" class="color-text w-10 h-10 rounded-full" style="background:#f5e9c9"></button>
+            <button data-color="#ffeb3b" class="color-text w-10 h-10 rounded-full" style="background:#ffeb3b"></button>
+          </div>
+        </div>
 
-  // ===== ESTADO =====
-  let db, currentBook=0, currentChapter=1, currentVerses=[];
-  let highlights = JSON.parse(localStorage.getItem('cc_highlights_v5')||'{}');
-  let favorites = JSON.parse(localStorage.getItem('cc_favorites_v5')||'{}');
-  let settings = JSON.parse(localStorage.getItem('cc_settings_v5')||'null') || {
-    fontSize:18, textColor:'branco', highlightColor:'amarelo', theme:'roxo'
-  };
+        <!-- Tema -->
+        <div class="bg-[#0f0a1a] rounded-[24px] p-5 border border-white/5">
+          <p class="text-[15px] font-medium mb-3">Tema</p>
+          <div class="grid grid-cols-2 gap-3">
+            <button data-theme="preto" class="theme-btn p-3 rounded-2xl bg-black border-2 border-purple-500 flex flex-col items-center gap-1">
+              <div class="w-8 h-8 rounded-lg bg-[#050507] border border-white/20"></div>
+              <span class="text-xs">Preto</span>
+            </button>
+            <button data-theme="roxo" class="theme-btn p-3 rounded-2xl bg-[#0f0a1a] border-2 border-transparent flex flex-col items-center gap-1">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-900 to-violet-700"></div>
+              <span class="text-xs">Roxo Profundo</span>
+            </button>
+          </div>
+        </div>
 
-  const textColors = {branco:'#ffffff', creme:'#f5e9c9', amarelo:'#fff9b0'};
-  const highlightColors = {amarelo:'#facc15', verde:'#22c55e', azul:'#3b82f6', rosa:'#ec4899'};
-  const themes = {
-    roxo:{bg:'#0a0015',bg2:'#1e0533'},
-    escuro:{bg:'#020617',bg2:'#0f172a'},
-    preto:{bg:'#000000',bg2:'#000000'}
-  };
+        <!-- Cor Grifo -->
+        <div class="bg-[#0f0a1a] rounded-[24px] p-5 border border-white/5">
+          <p class="text-[15px] font-medium mb-3">Cor do Grifo</p>
+          <div class="flex gap-3">
+            <button data-hl="#facc15" class="hl-color w-10 h-10 rounded-full ring-2 ring-white ring-offset-2 ring-offset-[#0f0a1a]" style="background:#facc15"></button>
+            <button data-hl="#4ade80" class="hl-color w-10 h-10 rounded-full" style="background:#4ade80"></button>
+            <button data-hl="#60a5fa" class="hl-color w-10 h-10 rounded-full" style="background:#60a5fa"></button>
+            <button data-hl="#f472b6" class="hl-color w-10 h-10 rounded-full" style="background:#f472b6"></button>
+          </div>
+        </div>
 
-  // ===== ELEMENTOS =====
-  const $ = s => document.querySelector(s);
-  const versesEl = $('#verses');
-  const toastEl = $('#toast');
-
-  // ===== UTILS =====
-  const showToast = (msg) => {
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    clearTimeout(showToast.t);
-    showToast.t = setTimeout(()=>toastEl.classList.remove('show'), 2000);
-  };
-  const copyText = async (txt) => {
-    try { await navigator.clipboard.writeText(txt); }
-    catch { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-  };
-  const saveSettings = () => localStorage.setItem('cc_settings_v5', JSON.stringify(settings));
-  const saveHighlights = () => localStorage.setItem('cc_highlights_v5', JSON.stringify(highlights));
-  const saveFavorites = () => localStorage.setItem('cc_favorites_v5', JSON.stringify(favorites));
-
-  // ===== SETTINGS =====
-  function applySettings(){
-    document.documentElement.style.setProperty('--font-size', settings.fontSize+'px');
-    document.documentElement.style.setProperty('--text', textColors[settings.textColor]);
-    document.documentElement.style.setProperty('--highlight', highlightColors[settings.highlightColor]);
-    const th = themes[settings.theme];
-    document.documentElement.style.setProperty('--bg', th.bg);
-    document.documentElement.style.setProperty('--bg2', th.bg2);
-    $('#fontSize').value = settings.fontSize;
-    $('#fontSizeVal').textContent = settings.fontSize+'px';
-    document.querySelectorAll('[data-text]').forEach(b=>b.classList.toggle('active', b.dataset.text===settings.textColor));
-    document.querySelectorAll('[data-hl]').forEach(b=>b.classList.toggle('active', b.dataset.hl===settings.highlightColor));
-    document.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active', b.dataset.theme===settings.theme));
-  }
-
-  // ===== INDEXEDDB =====
-  function openDB(){
-    return new Promise((res,rej)=>{
-      const req = indexedDB.open('biblia-cc-v5',1);
-      req.onupgradeneeded = e => { const d=e.target.result; if(!d.objectStoreNames.contains('chapters')) d.createObjectStore('chapters',{keyPath:'id'}); };
-      req.onsuccess = e => { db=e.target.result; res(); };
-      req.onerror = rej;
-    });
-  }
-  function getChapterDB(id){
-    return new Promise(res=>{
-      const tx = db.transaction('chapters','readonly'); const st=tx.objectStore('chapters'); const rq=st.get(id);
-      rq.onsuccess=()=>res(rq.result); rq.onerror=()=>res(null);
-    });
-  }
-  function putChapterDB(data){
-    const tx = db.transaction('chapters','readwrite'); tx.objectStore('chapters').put(data);
-  }
-
-  // ===== LOADING =====
-  async function simulateLoading(){
-    const fill=$('#progressFill'), text=$('#loading-text');
-    const dots=[ $('#dot1'), $('#dot2'), $('#dot3') ];
-    let p=0;
-    for(let i=0;i<3;i++){
-      dots[i].classList.add('active');
-      text.textContent = `Baixando fonte ${i+1} de 3: ${['NVI','ARA','ACF'][i]}...`;
-      for(let j=0;j<34;j++){ p+= Math.random()*1.8+0.8; fill.style.width=Math.min(p,100)+'%'; await new Promise(r=>setTimeout(r,35)); }
-    }
-    text.textContent='Organizando livros para modo offline...';
-    fill.style.width='100%';
-    await new Promise(r=>setTimeout(r,700));
-    $('#loading').style.opacity='0';
-    await new Promise(r=>setTimeout(r,400));
-    $('#loading').remove();
-    $('#app').hidden=false;
-  }
-
-  // ===== RENDER =====
-  function renderBooks(filter=''){
-    const list = $('#booksList'); list.innerHTML='';
-    books.forEach((b,i)=>{
-      if(filter && !b.name.toLowerCase().includes(filter.toLowerCase())) return;
-      const btn=document.createElement('button');
-      btn.className='book-btn'+(i===currentBook?' active':'');
-      btn.innerHTML=`<span>${b.name}</span><span class="book-chapters">${b.ch}</span>`;
-      btn.onclick=()=>{ currentBook=i; currentChapter=1; loadChapter(); closeSidebar(); renderBooks($('#searchInput').value); };
-      list.appendChild(btn);
-    });
-  }
-
-  async function loadChapter(){
-    const id = `${currentBook}-${currentChapter}`;
-    $('#headerTitle').textContent = `${books[currentBook].name} ${currentChapter}`;
-    $('#chapterTitle').textContent = `${books[currentBook].name} ${currentChapter}`;
-    
-    // chapter select
-    const sel=$('#chapterSelect'); sel.innerHTML=''; 
-    for(let i=1;i<=books[currentBook].ch;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; if(i===currentChapter)o.selected=true; sel.appendChild(o); }
-    $('#prevChap').disabled = currentChapter===1;
-    $('#nextChap').disabled = currentChapter===books[currentBook].ch;
-
-    // get from DB
-    let data = await getChapterDB(id);
-    if(!data){
-      let verses=[];
-      if(currentBook===0 && currentChapter===1){
-        verses = genesis1.map((t,i)=>({num:i+1,text:t}));
-      }else{
-        const count = currentBook===18 ? 6+Math.floor(Math.random()*8) : 15+Math.floor(Math.random()*12);
-        for(let v=1; v<=count; v++){
-          verses.push({num:v, text:generateVerseText(currentBook,currentChapter,v)});
-        }
-      }
-      data = {id, book:currentBook, chapter:currentChapter, verses, ts:Date.now()};
-      putChapterDB(data);
-    }
-    currentVerses = data.verses;
-    renderVerses();
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-
-  function generateVerseText(b,c,v){
-    const samples=[
-      `Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.`,
-      `O Senhor é o meu pastor; nada me faltará.`,
-      `Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito.`,
-      `Tudo posso naquele que me fortalece.`,
-      `Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.`
-    ];
-    return samples[(b+c+v)%samples.length] + ` (${books[b].name} ${c}:${v})`;
-  }
-
-  function renderVerses(){
-    versesEl.innerHTML='';
-    $('#favCount').textContent = Object.keys(favorites).length;
-    currentVerses.forEach(v=>{
-      const ref = `${currentBook}-${currentChapter}-${v.num}`;
-      const div=document.createElement('div');
-      div.className='verse'+(highlights[ref]?' highlighted':'')+(favorites[ref]?' favorited':'');
-      div.dataset.ref=ref;
-      div.innerHTML=`
-        <span class="verse-num" title="Duplo clique para favoritar">${v.num}</span>
-        <p class="verse-text">${v.text}</p>
-        <div class="verse-actions">
-          <button class="v-btn v-share" title="Compartilhar" aria-label="Compartilhar">
-            <svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <!-- Ações -->
+        <div class="space-y-3">
+          <button id="openPixBtn" class="w-full h-[52px] bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl font-medium flex items-center justify-center gap-2 active:scale-[0.98]">
+            <span>💜</span> Apoiar com PIX
           </button>
-          <button class="v-btn v-highlight" title="Grifar" aria-label="Grifar">
-            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-          </button>
-          <button class="v-btn v-copy" title="Copiar" aria-label="Copiar">
-            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <button id="downloadBtn" class="w-full h-[48px] bg-white/5 rounded-2xl text-sm flex items-center justify-center gap-2 border border-white/10">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Baixar Offline
           </button>
         </div>
-      `;
-      // actions
-      div.querySelector('.v-share').onclick = e=>{ e.stopPropagation(); shareVerse(v); };
-      div.querySelector('.v-highlight').onclick = e=>{ e.stopPropagation(); toggleHighlight(ref,div); };
-      div.querySelector('.v-copy').onclick = e=>{ e.stopPropagation(); copyVerse(v); };
-      
-      // favorite on double click number
-      div.querySelector('.verse-num').ondblclick = ()=> toggleFavorite(ref,div);
-      
-      // long press
-      let pressTimer;
-      const startPress = ()=>{ pressTimer=setTimeout(()=>{ toggleHighlight(ref,div); navigator.vibrate?.(20); }, 600); };
-      const cancelPress = ()=> clearTimeout(pressTimer);
-      div.addEventListener('touchstart', startPress, {passive:true});
-      div.addEventListener('touchend', cancelPress);
-      div.addEventListener('touchmove', cancelPress);
-      div.addEventListener('mousedown', startPress);
-      div.addEventListener('mouseup', cancelPress);
-      div.addEventListener('mouseleave', cancelPress);
-      div.addEventListener('contextmenu', e=>e.preventDefault());
 
-      versesEl.appendChild(div);
-    });
-  }
+        <!-- Sobre -->
+        <div class="bg-[#0f0a1a]/50 rounded-[24px] p-5 border border-white/5 text-center">
+          <p class="text-xs text-white/40 leading-relaxed">Bíblia ContonCreat v2.0<br>Feito com propósito • Almeida Revista e Corrigida<br><span class="text-purple-400">contomcreat@gmail.com</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  function toggleHighlight(ref,el){
-    if(highlights[ref]){ delete highlights[ref]; el.classList.remove('highlighted'); showToast('Grifo removido'); }
-    else{ highlights[ref]=true; el.classList.add('highlighted'); showToast('Versículo grifado'); }
-    saveHighlights();
-  }
-  function toggleFavorite(ref,el){
-    if(favorites[ref]){ delete favorites[ref]; el.classList.remove('favorited'); showToast('Removido dos favoritos'); }
-    else{ favorites[ref]=true; el.classList.add('favorited'); showToast('Adicionado aos favoritos ★'); }
-    saveFavorites(); $('#favCount').textContent=Object.keys(favorites).length;
-  }
-  async function shareVerse(v){
-    const txt = `${books[currentBook].name} ${currentChapter}:${v.num}\n${v.text}\n\n— Bíblia ContonCreat`;
-    try{ if(navigator.share) await navigator.share({title:`${books[currentBook].name} ${currentChapter}:${v.num}`, text:txt}); else throw 0; }
-    catch{ await copyText(txt); showToast('Versículo copiado'); }
-  }
-  async function copyVerse(v){
-    await copyText(`${books[currentBook].name} ${currentChapter}:${v.num} - ${v.text}`);
-    showToast('Copiado');
-  }
-  async function shareChapter(){
-    const txt = `${books[currentBook].name} ${currentChapter}\n\n`+currentVerses.map(v=>`${v.num}. ${v.text}`).join('\n')+`\n\n— Bíblia ContonCreat`;
-    try{ if(navigator.share) await navigator.share({title:`${books[currentBook].name} ${currentChapter}`, text:txt}); else throw 0; }
-    catch{ await copyText(txt); showToast('Capítulo copiado'); }
-  }
+  <!-- TAB BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-[#050507]/95 backdrop-blur-2xl border-t border-purple-950/50 safe-bottom">
+    <div class="flex items-center justify-around h-[72px] max-w-md mx-auto px-2">
+      <button data-tab="ler" class="tab-btn tab-active flex-1 flex flex-col items-center justify-center gap-1 py-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 0 0 1 4 19.5v-15A2.5 0 0 1 6.5 2z"/></svg>
+        <span class="text-[11px] font-medium">LER</span>
+      </button>
+      <button data-tab="buscar" class="tab-btn flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="text-[11px]">BUSCAR</span>
+      </button>
+      <button data-tab="grifos" class="tab-btn flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11-6 6v3h3l6-6"/><path d="m21 12-4.5 4.5"/><path d="M15.5 6.5 19 3l3 3-3.5 3.5"/></svg>
+        <span class="text-[11px]">GRIFOS</span>
+      </button>
+      <button data-tab="mais" class="tab-btn flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 0 0 0 .33-1.82 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 0 0 0-1.51 1z"/></svg>
+        <span class="text-[11px]">MAIS</span>
+      </button>
+    </div>
+  </nav>
+</div>
 
-  // ===== SIDEBAR =====
-  const sidebar=$('#sidebar'), overlay=$('#overlay');
-  function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
-  function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
-  $('#menuBtn').onclick=openSidebar; overlay.onclick=closeSidebar;
+<!-- MODAL VERSÍCULO -->
+<div id="verseModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div class="w-full sm:max-w-md bg-[#120c1f] sm:rounded-[32px] rounded-t-[32px] border-t sm:border border-purple-900/50 max-h-[90vh] flex flex-col">
+    <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mt-3 sm:hidden"></div>
+    <div class="p-5 border-b border-white/10">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 id="modalRef" class="text-xl font-bold"></h3>
+          <p class="text-xs text-purple-300/70 mt-0.5">Almeida Revista e Corrigida</p>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">✕</button>
+      </div>
+    </div>
+    <div class="p-5 overflow-y-auto">
+      <p id="modalText" class="font-serif text-[18px] leading-relaxed" style="color:var(--text-color)"></p>
+    </div>
+    <div class="p-4 grid grid-cols-3 gap-2.5 border-t border-white/10">
+      <button id="btnFav" class="h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-0.5 active:scale-95">
+        <span class="text-lg">♡</span><span class="text-[10px]">Favoritar</span>
+      </button>
+      <button id="btnHigh" class="h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-0.5 active:scale-95">
+        <span class="text-lg">🖍️</span><span class="text-[10px]">Grifar</span>
+      </button>
+      <button id="btnCopy" class="h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-0.5 active:scale-95">
+        <span class="text-lg">⎘</span><span class="text-[10px]">Copiar</span>
+      </button>
+      <button id="btnShare" class="h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-0.5 active:scale-95">
+        <span class="text-lg">↗</span><span class="text-[10px]">Compartilhar</span>
+      </button>
+      <button id="btnImage" class="h-12 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 col-span-2 flex items-center justify-center gap-1.5 font-medium active:scale-[0.98]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        Gerar Imagem
+      </button>
+    </div>
+  </div>
+</div>
 
-  // ===== SEARCH =====
-  $('#searchInput').addEventListener('input', e=> renderBooks(e.target.value));
-  $('#searchInput').addEventListener('keydown', e=>{
-    if(e.key==='Enter'){
-      const q=e.target.value.trim();
-      const m=q.match(/^(\d?\s*[a-zà-ú]+)\s+(\d+)(?::(\d+))?$/i);
-      if(m){
-        const name=m[1].toLowerCase().replace(/\s+/g,'');
-        const idx=books.findIndex(b=>b.name.toLowerCase().replace(/\s+/g,'').startsWith(name));
-        if(idx>-1){ currentBook=idx; currentChapter=Math.min(parseInt(m[2]),books[idx].ch); loadChapter(); closeSidebar(); showToast(`Abrindo ${books[idx].name} ${currentChapter}`); }
-      }
-    }
+<!-- MODAL PIX -->
+<div id="pixModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+  <div class="w-full max-w-sm bg-[#120c1f] rounded-[32px] border border-purple-900/50 p-6 text-center">
+    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center text-2xl mb-4">💜</div>
+    <h3 class="text-xl font-bold mb-1">Apoie este Projeto</h3>
+    <p class="text-sm text-white/60 mb-5">Sua doação mantém a Bíblia gratuita</p>
+    <div class="bg-black/50 rounded-2xl p-4 mb-4">
+      <img id="pixQR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020126580014BR.GOV.BCB.PIX0136contomcreat@gmail.com520400005303986540510.005802BR5920ContonCreat6014Rio+de+Janeiro62070503***6304E2CA" class="w-40 h-40 mx-auto rounded-xl bg-white p2" alt="QR PIX">
+    </div>
+    <div class="bg-white/5 rounded-xl p-3 mb-4">
+      <p class="text-[11px] text-white/50 mb-1">Chave PIX (e-mail)</p>
+      <p id="pixKey" class="font-mono text-sm">contomcreat@gmail.com</p>
+    </div>
+    <div class="grid grid-cols-2 gap-2.5">
+      <button onclick="copyPix()" class="h-11 rounded-xl bg-white/10 font-medium text-sm">Copiar</button>
+      <button onclick="closePix()" class="h-11 rounded-xl bg-purple-600 font-medium text-sm">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMAGEM -->
+<div id="imageModal" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col">
+  <div class="flex items-center justify-between p-4">
+    <button onclick="closeImage()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">✕</button>
+    <p class="text-sm font-medium">Imagem do Versículo</p>
+    <button id="downloadImage" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+  </div>
+  <div class="flex-1 flex items-center justify-center p-6">
+    <canvas id="verseCanvas" class="max-w-full max-h-full rounded-2xl shadow-2xl"></canvas>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[200] bg-[#1a1030] border border-purple-800/50 text-white px-5 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 text-sm font-medium"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+let db, bibleData = null;
+let currentBook = 0, currentChapter = 1, currentVerse = null;
+let favorites = JSON.parse(localStorage.getItem('contom_favoritos')||'[]');
+let highlights = JSON.parse(localStorage.getItem('contom_highlights')||'[]');
+let settings = JSON.parse(localStorage.getItem('contom_settings')||'{}');
+
+const booksOT = ["Gênesis","Êxodo","Levítico","Números","Deuteronômio","Josué","Juízes","Rute","1 Samuel","2 Samuel","1 Reis","2 Reis","1 Crônicas","2 Crônicas","Esdras","Neemias","Ester","Jó","Salmos","Provérbios","Eclesiastes","Cânticos","Isaías","Jeremias","Lamentações","Ezequiel","Daniel","Oséias","Joel","Amós","Obadias","Jonas","Miquéias","Naum","Habacuque","Sofonias","Ageu","Zacarias","Malaquias"];
+const booksNT = ["Mateus","Marcos","Lucas","João","Atos","Romanos","1 Coríntios","2 Coríntios","Gálatas","Efésios","Filipenses","Colossenses","1 Tessalonicenses","2 Tessalonicenses","1 Timóteo","2 Timóteo","Tito","Filemom","Hebreus","Tiago","1 Pedro","2 Pedro","1 João","2 João","3 João","Judas","Apocalipse"];
+
+// IndexedDB
+async function openDB(){
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open('ContonBibleDB',1);
+    r.onupgradeneeded = e => { const d=e.target.result; if(!d.objectStoreNames.contains('bible')) d.createObjectStore('bible'); };
+    r.onsuccess = e => res(e.target.result);
+    r.onerror = e => rej(e);
   });
+}
+async function saveBible(data){ const tx=db.transaction('bible','readwrite'); tx.objectStore('bible').put(data,'aa'); return new Promise(r=>tx.oncomplete=r); }
+async function getBible(){ const tx=db.transaction('bible','readonly'); const req=tx.objectStore('bible').get('aa'); return new Promise(r=>{req.onsuccess=()=>r(req.result);}); }
 
-  // ===== NAV =====
-  $('#prevChap').onclick=()=>{ if(currentChapter>1){ currentChapter--; loadChapter(); } };
-  $('#nextChap').onclick=()=>{ if(currentChapter<books[currentBook].ch){ currentChapter++; loadChapter(); } };
-  $('#chapterSelect').onchange=e=>{ currentChapter=parseInt(e.target.value); loadChapter(); };
+// Init
+async function init(){
+  db = await openDB();
+  let data = await getBible();
+  $('loadingBar').style.width='20%';
+  if(!data){
+    $('loadingText').textContent='Baixando Bíblia pela primeira vez...';
+    try{
+      const res = await fetch('https://raw.githubusercontent.com/thiagobodruk/biblia/master/json/aa.json');
+      $('loadingBar').style.width='60%';
+      data = await res.json();
+      await saveBible(data);
+      $('loadingBar').style.width='100%';
+    }catch(e){
+      console.error(e);
+      $('loadingText').textContent='Erro ao baixar. Usando versão reduzida.';
+      data = [{"name":"Gênesis","abbrev":"gn","chapters":[["No princípio criou Deus os céus e a terra.","E a terra era sem forma e vazia..."],["Assim os céus e a terra..."]]}];
+    }
+  }else{
+    $('loadingBar').style.width='80%';
+  }
+  bibleData = data;
+  applySettings();
+  renderBooks();
+  setupEvents();
+  setTimeout(()=>{
+    $('loading').classList.add('opacity-0','transition-opacity','duration-500');
+    setTimeout(()=>{ $('loading').classList.add('hidden'); $('app').classList.remove('hidden'); },500);
+  },300);
+}
 
-  // ===== SETTINGS PANEL =====
-  const settingsPanel=$('#settingsPanel');
-  $('#settingsBtn').onclick=()=>settingsPanel.classList.add('show');
-  $('#closeSettings').onclick=()=>settingsPanel.classList.remove('show');
-  settingsPanel.onclick=e=>{ if(e.target===settingsPanel) settingsPanel.classList.remove('show'); };
-  $('#fontSize').oninput=e=>{ settings.fontSize=parseInt(e.target.value); applySettings(); saveSettings(); };
-  document.querySelectorAll('[data-text]').forEach(b=>b.onclick=()=>{ settings.textColor=b.dataset.text; applySettings(); saveSettings(); });
-  document.querySelectorAll('[data-hl]').forEach(b=>b.onclick=()=>{ settings.highlightColor=b.dataset.hl; applySettings(); saveSettings(); });
-  document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{ settings.theme=b.dataset.theme; applySettings(); saveSettings(); });
-
-  // ===== OUTROS =====
-  $('#shareChapterBtn').onclick=shareChapter;
-  $('#pixBtn').onclick=async()=>{ await copyText('gstudio900@gmail.com'); showToast('Pix copiado: gstudio900@gmail.com'); };
-  $('#showFavs').onclick=()=>{
-    const favs=Object.keys(favorites);
-    if(!favs.length) return showToast('Nenhum favorito ainda');
-    // vai para o primeiro favorito
-    const [b,c]=favs[0].split('-').map(Number);
-    currentBook=b; currentChapter=c; loadChapter(); closeSidebar();
-    showToast(`${favs.length} versículos favoritados`);
+// Render Books
+function renderBooks(){
+  const container = $('booksContainer');
+  container.innerHTML='';
+  const createSection = (title, books, startIdx) => {
+    const sec = document.createElement('div');
+    sec.innerHTML = `<h2 class="text-[13px] font-semibold text-purple-300/80 uppercase tracking-wider mb-3 px-1">${title}</h2><div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" id="grid-${title}"></div>`;
+    container.appendChild(sec);
+    const grid = sec.querySelector(`#grid-${title}`);
+    books.forEach((name,i)=>{
+      const idx = startIdx + i;
+      const book = bibleData[idx];
+      if(!book) return;
+      const btn = document.createElement('button');
+      btn.className='group relative bg-[#0f0a1a] hover:bg-[#1a1030] border border-white/[0.06] hover:border-purple-800/50 rounded-2xl p-3.5 text-left transition-all active:scale-[0.97]';
+      btn.innerHTML=`<div class="text-[11px] text-purple-400/80 font-medium">${book.abbrev.toUpperCase()}</div><div class="text-[14px] font-medium leading-tight mt-1 truncate">${name}</div><div class="text-[11px] text-white/30 mt-1">${book.chapters.length} cap</div>`;
+      btn.onclick=()=>showChapters(idx);
+      grid.appendChild(btn);
+    });
   };
+  createSection('Antigo Testamento', booksOT, 0);
+  createSection('Novo Testamento', booksNT, 39);
+  $('booksView').classList.remove('hidden');
+  $('chaptersView').classList.add('hidden');
+  $('versesView').classList.add('hidden');
+  $('backBtn').classList.add('hidden');
+  $('headerTitle').textContent='Ler a Bíblia';
+  $('headerSub').textContent='Almeida Revista e Corrigida';
+}
 
-  // ===== INIT =====
-  async function init(){
-    applySettings();
-    renderBooks();
-    await openDB();
-    await simulateLoading();
-    loadChapter();
+function showChapters(bookIdx){
+  currentBook = bookIdx;
+  const book = bibleData[bookIdx];
+  $('booksView').classList.add('hidden');
+  $('chaptersView').classList.remove('hidden');
+  $('versesView').classList.add('hidden');
+  $('backBtn').classList.remove('hidden');
+  $('headerTitle').textContent=book.name;
+  $('headerSub').textContent=`${book.chapters.length} capítulos`;
+  const grid = $('chaptersGrid');
+  grid.innerHTML='';
+  for(let i=1;i<=book.chapters.length;i++){
+    const b=document.createElement('button');
+    b.className='aspect-square bg-[#0f0a1a] hover:bg-purple-900/30 border border-white/5 rounded-2xl font-medium text-[15px] active:scale-90 transition-all';
+    b.textContent=i;
+    b.onclick=()=>showVerses(bookIdx,i);
+    grid.appendChild(b);
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+}
 
-  // Service Worker for offline (simple cache)
-  if('serviceWorker' in navigator){
-    const swCode = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',e=>{});`;
-    const blob = new Blob([swCode],{type:'text/javascript'}); navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+function showVerses(bookIdx, chapter){
+  currentBook=bookIdx; currentChapter=chapter;
+  const book=bibleData[bookIdx];
+  $('booksView').classList.add('hidden');
+  $('chaptersView').classList.add('hidden');
+  $('versesView').classList.remove('hidden');
+  $('backBtn').classList.remove('hidden');
+  $('headerTitle').textContent=`${book.name} ${chapter}`;
+  $('headerSub').textContent='';
+  const list=$('versesList');
+  list.innerHTML=''; // GARANTE NÃO DUPLICAR
+  const verses = book.chapters[chapter-1] || [];
+  verses.forEach((text,i)=>{
+    const verseNum=i+1;
+    const refId=`${book.abbrev}.${chapter}.${verseNum}`;
+    const isFav=favorites.includes(refId);
+    const isHigh=highlights.find(h=>h.id===refId);
+    
+    const wrap=document.createElement('div');
+    wrap.className='group flex gap-3 py-3.5 border-b border-white/[0.04] active:bg-white/[0.02] cursor-pointer';
+    wrap.dataset.ref=refId;
+    if(isHigh){ wrap.style.background=`linear-gradient(90deg, ${settings.highlightColor||'#facc15'}15, transparent)`; wrap.style.borderLeft=`3px solid ${settings.highlightColor||'#facc15'}`; wrap.style.paddingLeft='9px'; wrap.style.marginLeft='-12px'; wrap.style.paddingRight='12px'; }
+    
+    wrap.innerHTML=`
+      <div class="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
+        <span class="text-[13px] font-medium text-purple-400/80 w-6 text-center">${verseNum}</span>
+        <button class="share-verse w-6 h-6 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 hover:opacity-100 flex items-center justify-center hover:bg-white/10 transition-all" title="Compartilhar">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </button>
+      </div>
+      <p class="verse-text flex-1 font-serif">${text}</p>
+      <div class="flex flex-col gap-1 pt-1">
+        ${isFav?'<span class="text-[14px]">❤️</span>':''}
+        ${isHigh?'<span class="text-[14px]">🖍️</span>':''}
+      </div>
+    `;
+    wrap.onclick=(e)=>{ if(e.target.closest('.share-verse')) return; openVerseModal(bookIdx,chapter,verseNum,text); };
+    wrap.querySelector('.share-verse').onclick=(e)=>{ e.stopPropagation(); shareVerse(refId, text, `${book.name} ${chapter}:${verseNum}`); };
+    list.appendChild(wrap);
+  });
+  list.scrollTop=0;
+}
+
+$('backBtn').onclick=()=>{
+  if(!$('versesView').classList.contains('hidden')) showChapters(currentBook);
+  else if(!$('chaptersView').classList.contains('hidden')) renderBooks();
+};
+
+// Modal
+function openVerseModal(bk,ch,vs,txt){
+  currentVerse={bookIdx:bk,chapter:ch,verse:vs,text:txt,refId:`${bibleData[bk].abbrev}.${ch}.${vs}`,ref:`${bibleData[bk].name} ${ch}:${vs}`};
+  $('modalRef').textContent=currentVerse.ref;
+  $('modalText').textContent=txt;
+  updateModalButtons();
+  $('verseModal').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){ $('verseModal').classList.add('hidden'); document.body.style.overflow=''; }
+function updateModalButtons(){
+  const isFav=favorites.includes(currentVerse.refId);
+  const isHigh=highlights.find(h=>h.id===currentVerse.refId);
+  $('btnFav').innerHTML=`<span class="text-lg">${isFav?'❤️':'♡'}</span><span class="text-[10px]">${isFav?'Favorito':'Favoritar'}</span>`;
+  $('btnFav').classList.toggle('bg-purple-600/30',isFav);
+  $('btnHigh').innerHTML=`<span class="text-lg">🖍️</span><span class="text-[10px]">${isHigh?'Remover':'Grifar'}</span>`;
+  $('btnHigh').classList.toggle('bg-amber-500/30',isHigh);
+}
+$('btnFav').onclick=()=>{ toggleFavorite(currentVerse.refId); updateModalButtons(); renderCurrentView(); };
+$('btnHigh').onclick=()=>{ toggleHighlight(); updateModalButtons(); renderCurrentView(); };
+$('btnCopy').onclick=async()=>{ await navigator.clipboard.writeText(`${currentVerse.text} (${currentVerse.ref})`); toast('Copiado!'); closeModal(); };
+$('btnShare').onclick=()=> shareVerse(currentVerse.refId, currentVerse.text, currentVerse.ref);
+$('btnImage').onclick=()=> generateImage();
+
+function toggleFavorite(id){
+  const i=favorites.indexOf(id);
+  if(i>-1) favorites.splice(i,1); else favorites.push(id);
+  localStorage.setItem('contom_favoritos', JSON.stringify(favorites));
+  toast(i>-1?'Removido dos favoritos':'Adicionado aos favoritos');
+}
+function toggleHighlight(){
+  const id=currentVerse.refId;
+  const idx=highlights.findIndex(h=>h.id===id);
+  if(idx>-1){ highlights.splice(idx,1); toast('Grifo removido'); }
+  else{ highlights.push({id,book:bibleData[currentVerse.bookIdx].name,chapter:currentVerse.chapter,verse:currentVerse.verse,text:currentVerse.text,ref:currentVerse.ref,date:Date.now()}); toast('Versículo grifado'); }
+  localStorage.setItem('contom_highlights', JSON.stringify(highlights));
+}
+function renderCurrentView(){ if(!$('versesView').classList.contains('hidden')) showVerses(currentBook,currentChapter); }
+
+async function shareVerse(id,text,ref){
+  const shareText=`"${text}"\n— ${ref}\n\nvia Bíblia ContonCreat`;
+  try{
+    if(navigator.share){ await navigator.share({title:ref,text:shareText}); }
+    else{ await navigator.clipboard.writeText(shareText); toast('Versículo copiado!'); }
+  }catch{}
+}
+
+// Busca
+let searchTimeout;
+$('searchInput').oninput = e => {
+  clearTimeout(searchTimeout);
+  const q=e.target.value.trim().toLowerCase();
+  if(q.length<2){ $('searchResults').innerHTML=''; return; }
+  searchTimeout=setTimeout(()=>doSearch(q),300);
+};
+function doSearch(q){
+  const results=[]; const max=100;
+  for(let b=0;b<bibleData.length && results.length<max;b++){
+    const book=bibleData[b];
+    for(let c=0;c<book.chapters.length && results.length<max;c++){
+      book.chapters[c].forEach((txt,v)=>{
+        if(txt.toLowerCase().includes(q)){
+          results.push({b,c:c+1,v:v+1,txt,book:book.name,ref:`${book.name} ${c+1}:${v+1}`,id:`${book.abbrev}.${c+1}.${v+1}`});
+        }
+      });
+    }
   }
-})();
+  const el=$('searchResults');
+  if(results.length===0){ el.innerHTML=`<div class="text-center py-16 text-white/40"><p>Nenhum resultado para "${q}"</p></div>`; return; }
+  el.innerHTML=`<p class="text-xs text-white/50 mb-3 px-1">${results.length} resultados</p>`+results.map(r=>{
+    const highlighted=r.txt.replace(new RegExp(`(${q})`,'gi'),'<mark class="bg-amber-400/30 text-amber-200 px-0.5 rounded">$1</mark>');
+    return `<button class="w-full text-left p-3.5 mb-2 bg-[#0f0a1a] hover:bg-[#1a1030] rounded-2xl border border-white/5" onclick="goToVerse(${r.b},${r.c},${r.v})"><div class="text-[12px] text-purple-400 font-medium mb-1">${r.ref}</div><p class="text-[14px] leading-snug font-serif" style="color:var(--text-color)">${highlighted}</p></button>`;
+  }).join('');
+}
+function goToVerse(b,c,v){ switchTab('ler'); showVerses(b,c); setTimeout(()=>{ const el=[...$('versesList').children][v-1]; el?.scrollIntoView({behavior:'smooth',block:'center'}); el?.classList.add('ring-2','ring-purple-500'); setTimeout(()=>el?.classList.remove('ring-2','ring-purple-500'),1500); },200); }
+document.querySelectorAll('.search-tag').forEach(btn=>btn.onclick=()=>{ $('searchInput').value=btn.dataset.term; $('searchInput').dispatchEvent(new Event('input')); });
+
+// Grifos
+$('grifosTabFav').onclick=()=>switchGrifos('fav');
+$('grifosTabHigh').onclick=()=>switchGrifos('high');
+function switchGrifos(t){
+  $('grifosTabFav').classList.toggle('bg-purple-600',t==='fav');
+  $('grifosTabFav').classList.toggle('text-white/60',t!=='fav');
+  $('grifosTabHigh').classList.toggle('bg-purple-600',t==='high');
+  $('grifosTabHigh').classList.toggle('text-white/60',t!=='high');
+  $('grifosFav').classList.toggle('hidden',t!=='fav');
+  $('grifosHigh').classList.toggle('hidden',t!=='high');
+  renderGrifos();
+}
+function renderGrifos(){
+  const favEl=$('grifosFav'), highEl=$('grifosHigh'), emptyEl=$('grifosEmpty');
+  favEl.innerHTML=''; highEl.innerHTML='';
+  if(favorites.length===0 && highlights.length===0){ emptyEl.classList.remove('hidden'); return; } else emptyEl.classList.add('hidden');
+  
+  favorites.forEach(id=>{
+    const [ab,ch,vs]=id.split('.');
+    const bIdx=bibleData.findIndex(b=>b.abbrev===ab);
+    if(bIdx<0) return;
+    const txt=bibleData[bIdx].chapters[+ch-1]?.[+vs-1]||'';
+    const ref=`${bibleData[bIdx].name} ${ch}:${vs}`;
+    favEl.innerHTML+=`<div class="p-4 bg-[#0f0a1a] rounded-2xl border border-white/5 cursor-pointer hover:border-purple-800/50" onclick="goToVerse(${bIdx},${ch},${vs})"><div class="flex justify-between items-start mb-1.5"><span class="text-xs text-pink-400 font-medium">❤️ ${ref}</span><button onclick="event.stopPropagation();toggleFavorite('${id}');renderGrifos();renderCurrentView()" class="text-white/30 hover:text-white">✕</button></div><p class="text-[14px] font-serif leading-snug" style="color:var(--text-color)">${txt}</p></div>`;
+  });
+  highlights.sort((a,b)=>b.date-a.date).forEach(h=>{
+    highEl.innerHTML+=`<div class="p-4 rounded-2xl border-l-4 cursor-pointer hover:opacity-80" style="background:${settings.highlightColor||'#facc15'}15; border-color:${settings.highlightColor||'#facc15'}; " onclick="goToVerse(${bibleData.findIndex(b=>b.name===h.book)},${h.chapter},${h.verse})"><div class="flex justify-between items-start mb-1.5"><span class="text-xs font-medium" style="color:${settings.highlightColor||'#facc15'}">🖍️ ${h.ref}</span><button onclick="event.stopPropagation();highlights=highlights.filter(x=>x.id!=='${h.id}');localStorage.setItem('contom_highlights',JSON.stringify(highlights));renderGrifos();renderCurrentView()" class="text-white/30 hover:text-white">✕</button></div><p class="text-[14px] font-serif leading-snug" style="color:var(--text-color)">${h.text}</p></div>`;
+  });
+}
+
+// Tabs
+function switchTab(tab){
+  document.querySelectorAll('.tab-content').forEach(s=>s.classList.add('hidden'));
+  $(`tab-${tab}`).classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('tab-active','text-purple-400'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active','text-purple-400');
+  if(tab==='buscar') setTimeout(()=>$('searchInput').focus(),100);
+  if(tab==='grifos') renderGrifos();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+$('searchBtn').onclick=()=>switchTab('buscar');
+
+// Settings
+function applySettings(){
+  const fs=settings.fontSize||17, tc=settings.textColor||'#ffffff', th=settings.theme||'preto', hc=settings.highlightColor||'#facc15';
+  document.documentElement.style.setProperty('--font-size',fs+'px');
+  document.documentElement.style.setProperty('--text-color',tc);
+  document.documentElement.style.setProperty('--highlight',hc);
+  document.body.style.background=th==='roxo'?'#0a0414':'#050507';
+  $('fontSlider').value=fs; $('fontValue').textContent=fs+'px';
+  settings.fontSize=fs; settings.textColor=tc; settings.theme=th; settings.highlightColor=hc;
+  localStorage.setItem('contom_settings',JSON.stringify(settings));
+}
+$('fontSlider').oninput=e=>{ settings.fontSize=+e.target.value; applySettings(); };
+document.querySelectorAll('.color-text').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.color-text').forEach(x=>x.classList.remove('ring-2','ring-purple-500','ring-offset-2','ring-offset-[#0f0a1a]')); b.classList.add('ring-2','ring-purple-500','ring-offset-2','ring-offset-[#0f0a1a]'); settings.textColor=b.dataset.color; applySettings(); });
+document.querySelectorAll('.theme-btn').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.theme-btn').forEach(x=>x.classList.remove('border-purple-500')); b.classList.add('border-purple-500'); settings.theme=b.dataset.theme; applySettings(); });
+document.querySelectorAll('.hl-color').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.hl-color').forEach(x=>x.classList.remove('ring-2','ring-white','ring-offset-2')); b.classList.add('ring-2','ring-white','ring-offset-2'); settings.highlightColor=b.dataset.hl; applySettings(); renderCurrentView(); });
+
+// PIX
+$('openPixBtn').onclick=()=>$('pixModal').classList.remove('hidden');
+function closePix(){ $('pixModal').classList.add('hidden'); }
+async function copyPix(){ await navigator.clipboard.writeText('contomcreat@gmail.com'); toast('Chave PIX copiada!'); }
+
+// Imagem
+function generateImage(){
+  closeModal();
+  const canvas=$('verseCanvas'), ctx=canvas.getContext('2d');
+  const W=1080,H=1350;
+  canvas.width=W; canvas.height=H;
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#1e0b3a'); grad.addColorStop(1,'#050507');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+  // decor
+  ctx.globalAlpha=0.08; ctx.fillStyle='#a855f7'; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(Math.random()*W,Math.random()*H,200+Math.random()*300,0,Math.PI*2); ctx.fill(); } ctx.globalAlpha=1;
+  // text
+  ctx.fillStyle='white'; ctx.font='48px Merriweather'; ctx.textAlign='center';
+  const words=currentVerse.text.split(' '); let lines=[],line='';
+  words.forEach(w=>{ const test=line+w+' '; if(ctx.measureText(test).width>900){ lines.push(line); line=w+' '; } else line=test; }); lines.push(line);
+  let y=H/2 - (lines.length*30);
+  lines.forEach(l=>{ ctx.fillText(l.trim(),W/2,y); y+=70; });
+  ctx.font='bold 36px Inter'; ctx.fillStyle='#c084fc'; ctx.fillText(`— ${currentVerse.ref} —`,W/2,y+80);
+  ctx.font='24px Inter'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fillText('Bíblia ContonCreat',W/2,H-80);
+  $('imageModal').classList.remove('hidden');
+}
+function closeImage(){ $('imageModal').classList.add('hidden'); }
+$('downloadImage').onclick=()=>{ const a=document.createElement('a'); a.href=$('verseCanvas').toDataURL('image/png'); a.download=`${currentVerse.ref.replace(':','-')}.png`; a.click(); toast('Imagem salva!'); };
+
+// Download
+$('downloadBtn').onclick=async()=>{ toast('Bíblia já está salva offline ✓'); };
+
+// Toast
+let toastT;
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.remove('opacity-0','pointer-events-none','-translate-y-2'); t.classList.add('opacity-100'); clearTimeout(toastT); toastT=setTimeout(()=>{ t.classList.add('opacity-0','pointer-events-none','-translate-y-2'); },2200); }
+
+// Setup
+function setupEvents(){
+  // fechar modais ao clicar fora
+  $('verseModal').onclick=e=>{ if(e.target.id==='verseModal') closeModal(); };
+  $('pixModal').onclick=e=>{ if(e.target.id==='pixModal') closePix(); };
+}
+
+init();
 </script>
 </body>
 </html>
